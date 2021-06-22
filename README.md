@@ -1,11 +1,11 @@
-# Tutor Web App
+# Web App
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
 
 ## General info
-This project is simple web application app which helps people, parents in specific get the best tutor based on their experince and skills.
+This project is simple web application which helps people, parents in specific get the best tutor based on their experince and skills.
 	
 ## Technologies
 Project is created with:
