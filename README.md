@@ -11,16 +11,15 @@ This project is simple web application which helps people, parents in specific g
 Project is created with:
 
 * Frontend technology : ReactJs
-* Backend technologies : NodeJs, Express
+* Backend technologies : Springboot
 * Database: MongoDB
 	
 ## Setup
-To run this project, install it locally using npm:
+To run this project, install intelliJ :
 
 ```
 $ cd ../mpp_wetutor
-$ npm install
-$ npm run server
+$ open and run with intelliJ
 ```
 
 
