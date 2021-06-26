@@ -49,7 +49,7 @@ class Login extends Component {
       // Login
       <div
         className="login shadow-lg p-3 mb-5 mt-5 ml-auto mr-auto bg-white rounded"
-        style={{ width: "800px", height: "500px" }}
+        style={{ width: "700px", height: "400px" }}
       >
         <div className="container">
           <div className="row">

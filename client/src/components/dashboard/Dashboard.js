@@ -21,7 +21,7 @@ class Dashboard extends Component {
     );
     return (
       <div className="dashboard" style={{height:"600px"}}>
-        <div className="container">
+        <div className="container-fluid">
           <div className="row">
             <div className="col-md-12">
               <h1 className="display-4">Dashboard</h1>
