@@ -22,12 +22,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private UserRepository repository;
+    private RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -61,10 +63,25 @@ public class UserService implements UserDetailsService {
             }else{
                 role = new Tutor();
             }
+            List<Role> roles = roleRepository.findAll();
+            boolean roleExsits = false;
+            for(Role r: roles){
+                if(r.getRoleName().equals(role.getRoleName())){
+                    roleExsits = true;
+                    role = r;
+                    break;
+                }
+            }
+
+            if(!roleExsits){
+                roleRepository.save(role);
+            }
+
             User user = new User(request.getUserName(), request.getPassword(), request.getEmail(), role);
             JSONObject successObject = new JSONObject();
             String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
+
             repository.save(user);
             successObject.put("success",true);
             successObject.put("message","Registered Successfully");
