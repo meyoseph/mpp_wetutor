@@ -2,7 +2,7 @@ import { SET_CURRENT_USER, SET_CURRENT_USER_INFO } from "../actions/types";
 import isEmpty from "../validation/is-empty";
 
 const initialState = {
-  insAuthenticated: false,
+  isAuthenticated: false,
   user: {},
   userInfo: {}
 };
