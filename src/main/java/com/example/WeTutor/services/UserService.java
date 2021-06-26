@@ -1,9 +1,6 @@
 package com.example.WeTutor.services;
 
-import com.example.WeTutor.entities.Parent;
-import com.example.WeTutor.entities.Role;
-import com.example.WeTutor.entities.Tutor;
-import com.example.WeTutor.entities.User;
+import com.example.WeTutor.entities.*;
 import com.example.WeTutor.repositories.RoleRepository;
 import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.RegistrationRequest;
