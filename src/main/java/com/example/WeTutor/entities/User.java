@@ -1,6 +1,7 @@
 package com.example.WeTutor.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,9 +25,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
 
-    @ManyToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
-    @JoinColumn(name="role_id")
+    @ManyToMany(mappedBy="users")
+    @JsonManagedReference
     private List<Role> roles = new ArrayList<>();
 
     public User(String userName, String password, String email,Role role) {
