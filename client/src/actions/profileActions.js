@@ -55,6 +55,55 @@ export const clearCurrentProfile = () => {
   };
 };
 
+<<<<<<< HEAD
+=======
+// Add Experience
+export const addExperience = (expData, history) => (dispatch) => {
+  // console.log(newUser);
+  axios
+    .post("/api/profile/experience", expData)
+    .then((res) => history.push("/dashboard"))
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+// Add Education
+export const addEducation = (eduData, history) => (dispatch) => {
+  // console.log(newUser);
+  axios
+    .post("/api/profile/education", eduData)
+    .then((res) => history.push("/dashboard"))
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+//Delete Experience
+export const deleteExperience = (id) => (dispatch) => {
+  axios
+    .delete(`/api/profile/experience/${id}`)
+    .then((res) =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data,
+      })
+    )
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+>>>>>>> 735a8f9ae5f8c2593641ed1cbe50010b4fd17e5b
 // Get profile by handle
 export const getProfileByHandle = (handle) => (dispatch) => {
   dispatch(setProfileLoading());
@@ -76,6 +125,10 @@ export const getProfileByHandle = (handle) => (dispatch) => {
 
 // Get all profiles
 export const getProfiles = () => (dispatch) => {
+<<<<<<< HEAD
+=======
+  // console.log(newUser);
+>>>>>>> 735a8f9ae5f8c2593641ed1cbe50010b4fd17e5b
   dispatch(setProfileLoading());
   axios
     .get("/api/profile/all")
@@ -93,6 +146,27 @@ export const getProfiles = () => (dispatch) => {
     );
 };
 
+<<<<<<< HEAD
+=======
+// Delete Education
+export const deleteEducation = (id) => (dispatch) => {
+  axios
+    .delete(`/api/profile/education/${id}`)
+    .then((res) =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data,
+      })
+    )
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+>>>>>>> 735a8f9ae5f8c2593641ed1cbe50010b4fd17e5b
 // Delete Account
 export const deleteAccount = () => (dispatch) => {
   if (window.confirm("Are you sure? This can NOT be undone")) {
