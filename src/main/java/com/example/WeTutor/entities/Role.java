@@ -23,11 +23,8 @@ public abstract class Role {
     protected String roleName;
 
     @ManyToMany(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
+            mappedBy = "roles"
     )
-    @JoinColumn(name="user_id", referencedColumnName = "user_id")
-    @JsonBackReference
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
 }

@@ -16,10 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -31,14 +28,16 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = repository.findByEmail(email);
+        Optional<User> optionalUser = repository.findByEmail(email);
+        User user = optionalUser.get();
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), new ArrayList<>());
     }
 
     public ResponseEntity<Object> signUpUser(RegistrationRequest request){
-        User emailExists = repository.findByEmail(request.getEmail());
+        Optional<User> optionalUser = repository.findByEmail(request.getEmail());
+        User userExists = optionalUser.get();
         JSONObject errorObject = new JSONObject();
-        if(emailExists != null){
+        if(userExists != null){
             errorObject.put("email", "Email already taken");
         }
         if(!validateInputs(request.getUserName())){

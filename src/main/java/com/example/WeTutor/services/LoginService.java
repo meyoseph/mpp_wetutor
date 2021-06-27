@@ -14,6 +14,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class LoginService {
@@ -56,7 +58,8 @@ public class LoginService {
     }
 
     public User loggedInUser(LoggedInUserRequest request) {
-        User user = repository.findByEmail(request.getEmail());
+        Optional<User> optionalUser = repository.findByEmail(request.getEmail());
+        User user = optionalUser.get();
         return user;
     }
 

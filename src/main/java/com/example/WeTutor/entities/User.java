@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -25,8 +26,22 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
 
-    @ManyToMany(mappedBy="users")
-    @JsonManagedReference
+
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    @JoinTable(
+            name = "userrole",
+            joinColumns = @JoinColumn(
+                    name = "user_id",
+                    foreignKey = @ForeignKey(name = "userrole_user_id_fk")
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id",
+                    foreignKey = @ForeignKey(name = "userrole_role_id_fk")
+            )
+    )
     private List<Role> roles = new ArrayList<>();
 
     public User(String userName, String password, String email,Role role) {
@@ -76,7 +91,20 @@ public class User {
         this.appUserRole = appUserRole;
     }
 
-//    public List<Rating> getRatings() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(user_id, user.user_id) && Objects.equals(userName, user.userName) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && appUserRole == user.appUserRole && Objects.equals(roles, user.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user_id, userName, password, email, appUserRole, roles);
+    }
+
+    //    public List<Rating> getRatings() {
 //        return ratings;
 //    }
 
@@ -88,4 +116,6 @@ public class User {
 //    public void setShow(Show show) {
 //        this.show.add(show);
 //    }
+
+
 }

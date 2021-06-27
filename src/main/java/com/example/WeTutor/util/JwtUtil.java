@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -55,7 +56,8 @@ public class JwtUtil {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        User user = userRepository.findByEmail(username);
+        Optional<User> optionalUser = userRepository.findByEmail(username);
+        User user = optionalUser.get();
         String changedUsername = user.getUserName();
         return (changedUsername.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }

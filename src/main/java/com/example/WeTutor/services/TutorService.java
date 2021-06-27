@@ -1,6 +1,4 @@
 package com.example.WeTutor.services;
-
-import com.example.WeTutor.entities.Profile;
 import com.example.WeTutor.entities.Tutor;
 import com.example.WeTutor.repositories.ProfileRepository;
 import com.example.WeTutor.repositories.TutorRepository;
