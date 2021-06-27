@@ -61,7 +61,7 @@ class Register extends Component {
       // Register
       <div
         className="register shadow-lg p-3 mb-5 mt-5 ml-auto mr-auto bg-white rounded"
-        style={{ width: "800px", height: "700px" }}
+        style={{ width: "700px", height: "650px" }}
       >
         <div className="container">
           <div className="row">
