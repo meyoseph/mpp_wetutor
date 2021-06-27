@@ -8,7 +8,6 @@ class Dashboard extends Component {
   render() {
     const { userInfo } = this.props.auth;
       let dashboardContent;
-      console.log(userInfo);
     // User is logged in but has no profile
     dashboardContent = (
       <div>

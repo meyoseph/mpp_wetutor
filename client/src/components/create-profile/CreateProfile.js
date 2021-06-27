@@ -25,20 +25,6 @@ class CreateProfile extends Component {
       workexperience: "",
       phonenumber: "",
       bio: "",
-
-      displaySocialInputs: false,
-      // handle: "",
-      // company: "",
-      // website: "",
-      // location: "",
-      // status: "",
-      // skills: "",
-      // githubusername: "",
-      twitter: "",
-      facebook: "",
-      linkedin: "",
-      youtube: "",
-      instagram: "",
       errors: {},
     };
 
@@ -81,8 +67,6 @@ class CreateProfile extends Component {
     let subj = [];
     lang = this.prepareData(this.state.languages);
     subj = this.prepareData(this.state.subjects);
-    console.log("lang", lang);
-    console.log("subj", subj);
     const profileData = {
       firstname: this.state.firstname,
       lastname: this.state.lastname,
@@ -96,20 +80,6 @@ class CreateProfile extends Component {
       languages: lang,
       workexperience: this.state.workexperience,
       bio: this.state.bio,
-
-      // twitter: this.state.twitter,
-      // facebook: this.state.facebook,
-      // linkedin: this.state.linkedin,
-      // youtube: this.state.youtube,
-      // instagram: this.state.instagram,
-
-      // handle: this.state.handle,
-      // company: this.state.company,
-      // website: this.state.website,
-      // location: this.state.location,
-      // status: this.state.status,
-      // skills: this.state.skills,
-      // githubusername: this.state.githubusername,
     };
     console.log("Profile Data", profileData);
     // this.props.createProfile(profileData, this.props.history);
@@ -166,18 +136,6 @@ class CreateProfile extends Component {
         </div>
       );
     }
-    // Select options for status
-    const options = [
-      { label: "* Select Professinal Status", value: 0 },
-      { label: "Developer", value: "Developer" },
-      { label: "Junior Developer", value: "Junior Developer" },
-      { label: "Senior Developer", value: "Senior Developer" },
-      { label: "Manager", value: "Manager" },
-      { label: "Student or Learning", value: "Student or Learning" },
-      { label: "Instructor or Teacher", value: "Instructor or Teacher" },
-      { label: "Intern", value: "Intern" },
-      { label: "Other", value: "Other" },
-    ];
 
     // Select options for Education
     const educationOptions = [
@@ -392,111 +350,6 @@ class CreateProfile extends Component {
                 className="btn btn-info btn-block mt-4 mb-5"
               />
             </form>
-            {/* <div className="row">
-              <form onSubmit={this.onSubmit}>
-                <div className="row">
-                  <div className="col-md-6">
-                    <TextFieldGroup
-                      placeholder="First name"
-                      name="firstName"
-                      value={this.state.firstname}
-                      onChange={this.onChange}
-                      error={errors.firstname}
-                      info="Your first name"
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <TextFieldGroup
-                      placeholder="Last name"
-                      name="lastName"
-                      value={this.state.lastname}
-                      onChange={this.onChange}
-                      error={errors.lastname}
-                      info="Your last name"
-                    />
-                  </div>
-                </div>
-                <TextAreaFieldGroup
-                  placeholder="* Phone Number"
-                  name="phonenumber"
-                  value={this.state.phonenumber}
-                  onChange={this.onChange}
-                  error={errors.phonenumber}
-                  info="A phone number for your profile and for you to be called."
-                />
-                <TextFieldGroup
-                  placeholder="* Subjects"
-                  name="subjects"
-                  value={this.state.subjects}
-                  onChange={this.onChange}
-                  error={errors.subjects}
-                  info="Please use comman separated values (eg. English,Physics,Biology)"
-                />
-                <SelectListGroup
-                  placeholder="Education"
-                  name="education"
-                  value={this.state.education}
-                  onChange={this.onChange}
-                  options={educationOptions}
-                  error={errors.education}
-                  info="Give us an idea of where you are at in your education"
-                />
-                <SelectListGroup
-                  placeholder="Exprience"
-                  name="workexperience"
-                  value={this.state.workexperience}
-                  onChange={this.onChange}
-                  options={workExperienceOptions}
-                  error={errors.workExperience}
-                  info="Give us an idea of how long you have worked"
-                />
-                <TextFieldGroup
-                  placeholder="Location"
-                  name="location"
-                  value={this.state.location}
-                  onChange={this.onChange}
-                  error={errors.location}
-                  info="City or city & state suggested (eg. Boston, MA)"
-                />
-                <SelectListGroup
-                  placeholder="Status"
-                  name="status"
-                  value={this.state.status}
-                  onChange={this.onChange}
-                  options={options}
-                  error={errors.status}
-                  info="Give us an idea of where you are at in your career"
-                />
-                <TextAreaFieldGroup
-                  placeholder="Short bio"
-                  name="bio"
-                  value={this.state.bio}
-                  onChange={this.onChange}
-                  error={errors.bio}
-                  info="Tell us a little bit about yourself"
-                />
-                <div className="mb-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      this.setState((prevState) => ({
-                        displaySocialInputs: !prevState.displaySocialInputs,
-                      }));
-                    }}
-                    className="btn btn-light"
-                  >
-                    Add Social Network Links
-                  </button>
-                  <span className="text-muted"> Optional</span>
-                </div>
-                {socialInputs}
-                <input
-                  type="submit"
-                  value="Submit"
-                  className="btn btn-info btn-block mt-4 mb-5"
-                />
-              </form>
-            </div> */}
           </div>
         </div>
       </div>
