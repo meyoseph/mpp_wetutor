@@ -6,14 +6,14 @@ import {
   GET_PROFILE,
   CLEAR_CURRENT_PROFILE,
   SET_CURRENT_USER,
-  GET_PROFILES,
+  GET_PROFILES
 } from "./types";
 
 // Get Current Profile
-export const getCurrentProfile = () => (dispatch) => {
+export const getCurrentProfile = (id) => (dispatch) => {
   dispatch(setProfileLoading());
   axios
-    .get("/api/profile")
+    .get('/api/profile/current')
     .then((res) =>
       dispatch({
         type: GET_PROFILE,
@@ -31,7 +31,20 @@ export const getCurrentProfile = () => (dispatch) => {
 // Create profile
 export const createProfile = (profileData, history) => (dispatch) => {
   axios
-    .post("/api/profile", profileData)
+    .post("/api/profile/create-profile", profileData)
+    .then((res) => history.push("/dashboard"))
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+// Edit profile
+export const editProfile = (profileData, history) => (dispatch) => {
+  axios
+    .post("/api/profile/update-profile", profileData)
     .then((res) => history.push("/dashboard"))
     .catch((err) =>
       dispatch({

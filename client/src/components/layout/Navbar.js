@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
-// import { clearCurrentProfile } from "../../actions/profileActions";
+import { logoutUser, clearFullUserInfo } from "../../actions/authActions";
+import { clearCurrentProfile } from "../../actions/profileActions";
 
 class Navbar extends Component {
   onLogoutClick(e) {
     e.preventDefault();
-    // this.props.clearCurrentProfile();
+    this.props.clearCurrentProfile();
+    this.props.clearFullUserInfo();
     this.props.logoutUser();
   }
 
@@ -55,7 +56,7 @@ class Navbar extends Component {
     return (
       // <!-- Navbar -->
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container-fluid">
+        <div className="container">
           <Link
             className="navbar-brand"
             to={isAuthenticated ? "/dashboard" : "/"}
@@ -90,9 +91,11 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
   logoutUser: PropTypes.func.isRequired,
+  clearCurrentProfile: PropTypes.func.isRequired,
+  clearFullUserInfo: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
 const mapStateProps = (state) => ({
   auth: state.auth,
 });
-export default connect(mapStateProps, { logoutUser })(Navbar);
+export default connect(mapStateProps, { logoutUser, clearCurrentProfile, clearFullUserInfo })(Navbar);

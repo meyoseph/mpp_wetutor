@@ -1,25 +1,68 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import Spinner from "../common/spinner";
+import ProfileActions from "./ProfileActions";
+import {
+  getCurrentProfile,
+} from "../../actions/profileActions";
+import MyProfile from "./MyProfile";
+import { ToastProvider } from "react-toast-notifications";
 
 class Dashboard extends Component {
+  componentDidMount() {
+    this.props.getCurrentProfile();
+  }
 
   render() {
     const { userInfo } = this.props.auth;
-      let dashboardContent;
-    // User is logged in but has no profile
-    dashboardContent = (
-      <div>
-        <p className="lead text-muted">Welcome {userInfo.userName}</p>
-        <p>You have not yet set a profile, please add some info</p>
-        <Link to="/create-profile" className="btn btn-lg btn-info">
-          Create Profile
-        </Link>
-      </div>
-    );
+    const { profile, loading } = this.props.profile;
+
+    let dashboardContent;
+    if (profile === null || loading) {
+      dashboardContent = <Spinner />;
+    } else {
+      // Check if logged in user has a profile data
+      if (Object.keys(profile).length > 0) {
+        dashboardContent = (
+          <div>
+            <p className="lead text-muted">
+              Welcome{" "}
+              <Link to={`/profile/${profile.handle}`}>{userInfo.userName}</Link>
+            </p>
+            <hr />
+            <ToastProvider>
+              <ProfileActions
+                profile={profile}
+              />
+            </ToastProvider>
+            <MyProfile profile={profile} />
+            <div style={{ marginBottom: "60px" }}>
+              <button
+                // onClick={this.onDeleteClick.bind(this)}
+                className="btn btn-danger"
+              >
+                Delete My Account
+              </button>
+            </div>
+          </div>
+        );
+      } else {
+        // User is logged in but has no profile
+        dashboardContent = (
+          <div>
+            <p className="lead text-muted">Welcome {userInfo.userName}</p>
+            <p>You have not yet set a profile, please add some info</p>
+            <Link to="/create-profile" className="btn btn-lg btn-info">
+              Create Profile
+            </Link>
+          </div>
+        );
+      }
+    }
     return (
-      <div className="dashboard" style={{height:"600px"}}>
+      <div className="dashboard" style={{ height: "auto" }}>
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-12">
@@ -34,13 +77,15 @@ class Dashboard extends Component {
 }
 
 Dashboard.protoTypes = {
-  //   getCurrentProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
   //   deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  //   profile: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 const mapStateProps = (state) => ({
-  //   profile: state.profile,
+  profile: state.profile,
   auth: state.auth,
 });
-export default connect(mapStateProps, {})(Dashboard);
+export default connect(mapStateProps, { getCurrentProfile })(
+  Dashboard
+);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CLEAR_ERRORS, GET_ERRORS, SET_CURRENT_USER, SET_CURRENT_USER_INFO } from './types';
+import { CLEAR_ERRORS, GET_ERRORS, SET_CURRENT_USER, SET_CURRENT_USER_INFO, CLEAR_CURRENT_USER_INFO } from './types';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 // Register User
@@ -69,3 +69,10 @@ export const logoutUser = () => dispatch => {
     dispatch(setCurrentUser({}))
 
 }
+
+// Clear Profile
+export const clearFullUserInfo = () => {
+    return {
+      type: CLEAR_CURRENT_USER_INFO,
+    };
+  };
