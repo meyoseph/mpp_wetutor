@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
-import Select from "react-select";
 import SelectListGroup from "../common/SelectListGroup";
-import { createProfile } from "../../actions/profileActions";
+import Select from "react-select";
+import { editProfile, getCurrentProfile } from "../../actions/profileActions";
+import isEmpty from "../../validation/is-empty";
 
-class CreateProfile extends Component {
+class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +27,6 @@ class CreateProfile extends Component {
       bio: "",
       errors: {},
     };
-
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -39,11 +39,65 @@ class CreateProfile extends Component {
     this.setState({ subjects: selectedSubjects });
   };
 
+  componentDidMount() {
+    this.props.getCurrentProfile();
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
+
+    if (nextProps.profile.profile) {
+      const profile = nextProps.profile.profile;
+
+      let subSelected = [];
+      let langSelected = [];
+
+      const skillsList = profile.subjects.split(",");
+      const languagesList = profile.languages.split(",");
+
+      subSelected = this.prepareSelected(skillsList);
+      langSelected = this.prepareSelected(languagesList);
+
+      // If profile doesnt exist, make an empty sring
+      profile.firstname = !isEmpty(profile.firstName) ? profile.firstName : "";
+      profile.lastname = !isEmpty(profile.lastName) ? profile.lastName : "";
+      profile.gender = !isEmpty(profile.gender) ? profile.gender : "";
+      profile.age = !isEmpty(profile.age) ? profile.age : "";
+      profile.majorsubject = !isEmpty(profile.majorSubject)
+        ? profile.majorSubject
+        : "";
+      profile.education = !isEmpty(profile.educations)
+        ? profile.educations
+        : "";
+      profile.location = !isEmpty(profile.location) ? profile.location : "";
+      profile.workexperience = !isEmpty(profile.workExperiences)
+        ? profile.workExperiences
+        : "";
+      profile.phonenumber = !isEmpty(profile.phoneNumber)
+        ? profile.phoneNumber
+        : "";
+      profile.bio = !isEmpty(profile.motive) ? profile.motive : "";
+
+      // Set component fields state
+      this.setState({
+        firstname: profile.firstname,
+        lastname: profile.lastname,
+        gender: profile.gender,
+        age: profile.age,
+        majorsubject: profile.majorsubject,
+        subjects: subSelected,
+        education: profile.education,
+        location: profile.location,
+        languages: langSelected,
+        workexperience: profile.workexperience,
+        phonenumber: profile.phonenumber,
+        bio: profile.bio,
+      });
+    }
   }
+
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -60,12 +114,22 @@ class CreateProfile extends Component {
     return temp2;
   };
 
+  prepareSelected = (list) => {
+    const subDefault = [];
+    list.map((sub) => {
+      subDefault.push({ value: sub, label: sub });
+      return subDefault["label"];
+    });
+    return subDefault;
+  };
   onSubmit(e) {
     e.preventDefault();
+
     let lang = [];
     let subj = [];
     lang = this.prepareData(this.state.languages);
     subj = this.prepareData(this.state.subjects);
+
     const profileData = {
       firstName: this.state.firstname,
       lastName: this.state.lastname,
@@ -79,14 +143,13 @@ class CreateProfile extends Component {
       languages: lang,
       workExperiences: this.state.workexperience,
       motive: this.state.bio,
-      tutor: this.props.auth.userInfo.id
+      tutor: this.props.auth.userInfo.id,
     };
-    this.props.createProfile(profileData, this.props.history);
+    this.props.editProfile(profileData, this.props.history);
   }
 
   render() {
     const { errors } = this.state;
-
     // Select options for Education
     const educationOptions = [
       { label: "* Select your current education level", value: 0 },
@@ -144,10 +207,10 @@ class CreateProfile extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-12 m-auto">
-              <h1 className="display-4 text-center">Create Your Profile</h1>
-              <p className="lead text-center">
-                Let's get some information to make your profile stand out
-              </p>
+              <Link to="/dashboard" className="btn btn-light mt-5">
+                Go Back
+              </Link>
+              <h1 className="display-4 text-center">Edit Profile</h1>
               <hr style={{ width: "1100px" }} />
               <small className="d-block pb-3">* = required fields</small>
             </div>
@@ -249,6 +312,8 @@ class CreateProfile extends Component {
                 <div className="col-md-6 mb-3">
                   <Select
                     name="languages"
+                    closeMenuOnSelect={true}
+                    value={this.state.languages}
                     onChange={this.handleLanguagesChange}
                     options={languageOptions}
                     className="basic-multi-select"
@@ -257,11 +322,16 @@ class CreateProfile extends Component {
                   <small className="form-text text-muted">
                     Select languages
                   </small>
-                  {errors.languages && <small><div style={{color: "red"}}>{errors.languages}</div></small>}
+                  {errors.languages && (
+                    <small>
+                      <div style={{ color: "red" }}>{errors.languages}</div>
+                    </small>
+                  )}
                 </div>
                 <div className="col-md-6 mb-3">
                   <Select
                     options={subjectsOptions}
+                    value={this.state.subjects}
                     onChange={this.handleSubjectsChange}
                     className="basic-multi-select"
                     isMulti
@@ -269,7 +339,11 @@ class CreateProfile extends Component {
                   <small className="form-text text-muted">
                     Please select additional subjects
                   </small>
-                  {errors.subjects && <small><div style={{color: "red"}}>{errors.subjects}</div></small>}
+                  {errors.subjects && (
+                    <small>
+                      <div style={{ color: "red" }}>{errors.subjects}</div>
+                    </small>
+                  )}
                 </div>
               </div>
               <div className="row">
@@ -308,9 +382,11 @@ class CreateProfile extends Component {
   }
 }
 
-CreateProfile.propTypes = {
-  auth: PropTypes.object.isRequired,
+EditProfile.propTypes = {
+  editProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 };
 
@@ -319,6 +395,6 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
   errors: state.errors,
 });
-export default connect(mapStateToProps, { createProfile })(
-  withRouter(CreateProfile)
+export default connect(mapStateToProps, { editProfile, getCurrentProfile })(
+  withRouter(EditProfile)
 );

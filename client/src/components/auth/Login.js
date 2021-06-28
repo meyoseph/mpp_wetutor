@@ -39,12 +39,10 @@ class Login extends Component {
       password: this.state.password,
     };
     this.props.loginUser(userData);
-    console.log("User credential", userData);
   }
   render() {
     const { errors } = this.state;
-    
-  console.log(errors);
+
     return (
       // Login
       <div
@@ -59,6 +57,12 @@ class Login extends Component {
                 Sign in to your WeTutor account
               </p>
               <hr style={{ width: "300px" }} />
+              {errors.credentials && (
+                <div class="alert alert-danger" role="alert">
+                  {errors.credentials}
+                </div>
+              )}
+
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="Email Address"
@@ -90,12 +94,12 @@ Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   getUserInfo: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
-}
+  errors: PropTypes.object.isRequired,
+};
 
-const mapStateToProps = ( state ) =>({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
-}) 
+  errors: state.errors,
+});
 
 export default connect(mapStateToProps, { loginUser, getUserInfo })(Login);

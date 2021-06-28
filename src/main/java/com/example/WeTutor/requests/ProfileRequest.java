@@ -17,9 +17,9 @@ public class ProfileRequest {
     private final String location;
     private final String motive;
     private final String majorSubject;
-    private final String subjects;//Type
+    private final String[] subjects;
     private final String educations;
     private final String workExperiences;
-    private final String languages;
-    private final Tutor tutor;
+    private final String[] languages;
+    private final String tutor;
 }
