@@ -29,4 +29,14 @@ public class Tutor extends Role{
         this.roleName = "tutor";
     }
 
+    public Tutor(String id, String roleName, List<User> users, String educationLevel, Profile profile) {
+        super(id, roleName, users);
+        this.educationLevel = educationLevel;
+        this.profile = profile;
+    }
+
+    public Tutor(String educationLevel, Profile profile) {
+        this.educationLevel = educationLevel;
+        this.profile = profile;
+    }
 }

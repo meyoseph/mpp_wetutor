@@ -6,7 +6,9 @@ import com.example.WeTutor.entities.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface TutorRepository extends MongoRepository<Tutor,Integer> {
-    Tutor findByTutorId(String tutorId);
+    Optional<Tutor> findByTutorId(String tutorId);
 }

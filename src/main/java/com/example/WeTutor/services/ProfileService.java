@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -44,10 +45,10 @@ public class ProfileService {
     public ResponseEntity<Object> getProfile(String tutorId) {
         JSONObject responseObject = new JSONObject();
 
-        Profile profile = profileRepository.findByTutorId(tutorId);
+        Optional<Profile> profile = profileRepository.findByTutorId(tutorId);
 
         responseObject.put("success",true);
-        responseObject.put("profile", profile);
+        responseObject.put("profile", profile.get());
 
         return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
@@ -169,7 +170,8 @@ public class ProfileService {
         }
 
         if(responseObject.isEmpty()){
-            Profile profile = profileRepository.findByTutorId(profileRequest.getTutor().getTutorId());
+            Optional<Profile> optionalProfile = profileRepository.findByTutorId(profileRequest.getTutor().getTutorId());
+            Profile profile = optionalProfile.get();
             profile.setAge(profileRequest.getAge());
             profile.setFirstName(profileRequest.getFirstName());
             profile.setLastName(profileRequest.getLastName());
@@ -210,7 +212,7 @@ public class ProfileService {
         }
 
         if(responseObject.isEmpty()){
-            Profile profile = profileRepository.findByProfileId(profileId);
+            Optional<Profile> profile = profileRepository.findByProfileId(profileId);
             responseObject.put("success", true);
             responseObject.put("message","Profile updated successfully");
 
@@ -237,8 +239,8 @@ public class ProfileService {
         }
 
         if(responseObject.isEmpty()){
-            Profile profile = profileRepository.findByTutorId(tutor_id);
-
+            Optional<Profile> optionalProfile = profileRepository.findByTutorId(tutor_id);
+            Profile profile = optionalProfile.get();
             profileRepository.delete(profile);
             responseObject.put("success", true);
             responseObject.put("message","Profile updated successfully");

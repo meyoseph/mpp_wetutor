@@ -6,9 +6,11 @@ import com.example.WeTutor.entities.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProfileRepository extends MongoRepository<Profile,Integer> {
-    Profile findByTutorId(String tutorId);
-    Profile findByProfileId(String profileId);
-    Profile getProfileByTutor(Tutor tutor);
+    Optional<Profile> findByTutorId(String tutorId);
+    Optional<Profile> findByProfileId(String profileId);
+    Optional<Profile> getProfileByTutor(Tutor tutor);
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,10 +37,10 @@ public class TutorService {
     public ResponseEntity<Object> getTutor(String tutorId) {
         JSONObject responseObject = new JSONObject();
 
-        Tutor tutor = tutorRepository.findByTutorId(tutorId);
+        Optional<Tutor> optionalTutor = tutorRepository.findByTutorId(tutorId);
 
         responseObject.put("success",true);
-        responseObject.put("tutor", tutor);
+        responseObject.put("tutor", optionalTutor.get());
 
         return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
