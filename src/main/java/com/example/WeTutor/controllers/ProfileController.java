@@ -55,9 +55,9 @@ public class ProfileController {
     }
 
     // Updates profile in DB
-    @GetMapping("/request-approval")
-    public ResponseEntity<Object> requestApproval(@RequestParam String profile_id) throws Exception {
-        ResponseEntity<Object> response = profileService.request(profile_id);
+    @GetMapping("/request-approval/{profileId}")
+    public ResponseEntity<Object> requestApproval(@PathVariable("profileId") String profileId) throws Exception {
+        ResponseEntity<Object> response = profileService.request(profileId);
         return response;
     }
 
