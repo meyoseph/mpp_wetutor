@@ -6,14 +6,14 @@ import {
   GET_PROFILE,
   CLEAR_CURRENT_PROFILE,
   SET_CURRENT_USER,
-  GET_PROFILES,
+  GET_PROFILES
 } from "./types";
 
 // Get Current Profile
-export const getCurrentProfile = () => (dispatch) => {
+export const getCurrentProfile = (id) => (dispatch) => {
   dispatch(setProfileLoading());
   axios
-    .get("/api/profile")
+    .get('/api/profile/current')
     .then((res) =>
       dispatch({
         type: GET_PROFILE,
@@ -30,9 +30,21 @@ export const getCurrentProfile = () => (dispatch) => {
 
 // Create profile
 export const createProfile = (profileData, history) => (dispatch) => {
-  // console.log(newUser);
   axios
-    .post("/api/profile", profileData)
+    .post("/api/profile/create-profile", profileData)
+    .then((res) => history.push("/dashboard"))
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+// Edit profile
+export const editProfile = (profileData, history) => (dispatch) => {
+  axios
+    .post("/api/profile/update-profile", profileData)
     .then((res) => history.push("/dashboard"))
     .catch((err) =>
       dispatch({
@@ -56,52 +68,6 @@ export const clearCurrentProfile = () => {
   };
 };
 
-// Add Experience
-export const addExperience = (expData, history) => (dispatch) => {
-  // console.log(newUser);
-  axios
-    .post("/api/profile/experience", expData)
-    .then((res) => history.push("/dashboard"))
-    .catch((err) =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      })
-    );
-};
-
-// Add Education
-export const addEducation = (eduData, history) => (dispatch) => {
-  // console.log(newUser);
-  axios
-    .post("/api/profile/education", eduData)
-    .then((res) => history.push("/dashboard"))
-    .catch((err) =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      })
-    );
-};
-
-//Delete Experience
-export const deleteExperience = (id) => (dispatch) => {
-  axios
-    .delete(`/api/profile/experience/${id}`)
-    .then((res) =>
-      dispatch({
-        type: GET_PROFILE,
-        payload: res.data,
-      })
-    )
-    .catch((err) =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      })
-    );
-};
-
 // Get profile by handle
 export const getProfileByHandle = (handle) => (dispatch) => {
   dispatch(setProfileLoading());
@@ -123,7 +89,6 @@ export const getProfileByHandle = (handle) => (dispatch) => {
 
 // Get all profiles
 export const getProfiles = () => (dispatch) => {
-  // console.log(newUser);
   dispatch(setProfileLoading());
   axios
     .get("/api/profile/all")
@@ -137,24 +102,6 @@ export const getProfiles = () => (dispatch) => {
       dispatch({
         type: GET_PROFILES,
         payload: null,
-      })
-    );
-};
-
-// Delete Education
-export const deleteEducation = (id) => (dispatch) => {
-  axios
-    .delete(`/api/profile/education/${id}`)
-    .then((res) =>
-      dispatch({
-        type: GET_PROFILE,
-        payload: res.data,
-      })
-    )
-    .catch((err) =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
       })
     );
 };

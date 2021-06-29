@@ -1,15 +1,13 @@
 package com.example.WeTutor.services;
+
 import com.example.WeTutor.entities.Tutor;
-import com.example.WeTutor.repositories.ProfileRepository;
 import com.example.WeTutor.repositories.TutorRepository;
-import com.example.WeTutor.requests.ProfileRequest;
 import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,7 +34,7 @@ public class TutorService {
     public ResponseEntity<Object> getTutor(String tutorId) {
         JSONObject responseObject = new JSONObject();
 
-        Tutor tutor = tutorRepository.findByTutorId(tutorId);
+        Tutor tutor = tutorRepository.findTutorById(tutorId);
 
         responseObject.put("success",true);
         responseObject.put("tutor", tutor);

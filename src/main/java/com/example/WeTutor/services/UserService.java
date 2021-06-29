@@ -8,15 +8,14 @@ import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -28,16 +27,14 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> optionalUser = repository.findByEmail(email);
-        User user = optionalUser.get();
+        User user = repository.findByEmail(email);
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), new ArrayList<>());
     }
 
     public ResponseEntity<Object> signUpUser(RegistrationRequest request){
-        Optional<User> optionalUser = repository.findByEmail(request.getEmail());
-        User userExists = optionalUser.get();
+        User emailExists = repository.findByEmail(request.getEmail());
         JSONObject errorObject = new JSONObject();
-        if(userExists != null){
+        if(emailExists != null){
             errorObject.put("email", "Email already taken");
         }
         if(!validateInputs(request.getUserName())){

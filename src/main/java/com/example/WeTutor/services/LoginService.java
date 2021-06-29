@@ -45,8 +45,7 @@ public class LoginService {
                         new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
                 );
             } catch (Exception ex) {
-                responseObject.put("success",false);
-                responseObject.put("status","Unauthorized");
+                responseObject.put("credentials","Invalid credentials");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseObject);
             }
             String token = jwtUtil.generateToken(request.getEmail());
