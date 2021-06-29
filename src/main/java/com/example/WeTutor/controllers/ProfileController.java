@@ -68,4 +68,11 @@ public class ProfileController {
         return response;
     }
 
+    // Updates profile in DB
+    @GetMapping("/block-profile")
+    public ResponseEntity<Object> blockProfile(@RequestParam String profile_id) throws Exception {
+        ResponseEntity<Object> response = profileService.blockProfile(profile_id);
+        return response;
+    }
+
 }
