@@ -55,23 +55,23 @@ public class ProfileController {
     }
 
     // Updates profile in DB
-    @GetMapping("/request-approval")
-    public ResponseEntity<Object> requestApproval(@RequestParam String profile_id) throws Exception {
-        ResponseEntity<Object> response = profileService.request(profile_id);
+    @GetMapping("/request-approval/{profileId}")
+    public ResponseEntity<Object> requestApproval(@PathVariable("profileId") String profileId) throws Exception {
+        ResponseEntity<Object> response = profileService.request(profileId);
         return response;
     }
 
     // Updates profile in DB
-    @GetMapping("/approve-profile")
-    public ResponseEntity<Object> approveProfile(@RequestParam String profile_id) throws Exception {
-        ResponseEntity<Object> response = profileService.approveProfile(profile_id);
+    @GetMapping("/approve-profile/{profileId}")
+    public ResponseEntity<Object> approveProfile(@PathVariable("profileId") String profileId) throws Exception {
+        ResponseEntity<Object> response = profileService.approveProfile(profileId);
         return response;
     }
 
     // Updates profile in DB
-    @GetMapping("/block-profile")
-    public ResponseEntity<Object> blockProfile(@RequestParam String profile_id) throws Exception {
-        ResponseEntity<Object> response = profileService.blockProfile(profile_id);
+    @GetMapping("/block-profile/{profileId}")
+    public ResponseEntity<Object> blockProfile(@PathVariable("profileId") String profileId) throws Exception {
+        ResponseEntity<Object> response = profileService.blockProfile(profileId);
         return response;
     }
 
