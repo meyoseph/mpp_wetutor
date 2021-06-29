@@ -1,8 +1,21 @@
 package com.example.WeTutor.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "Feedback_TBL")
 public class Feedback{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,21 +24,17 @@ public class Feedback{
     private int rating;
     private LocalDate feedbackDate;
 
-    @ManyToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
-    @JoinColumn(name="parent_id")
-    private Parent parent;
+    @OneToOne(mappedBy = "parentFeedbacks")
+    private User parent;
 
-    @ManyToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
-    @JoinColumn(name="tutor_id")
-    private Tutor tutor;
+    @OneToOne(mappedBy = "tutorFeedbacks")
+    private User tutor;
 
-    public Feedback(Parent parent, Tutor tutor, int rating, LocalDate localDate){
+    public Feedback(User parent, int rating, User tutor){
         this.parent = parent;
         this.tutor = tutor;
         this.rating = rating;
-        this.feedbackDate = localDate;
+        this.feedbackDate = LocalDate.now();
     }
 
 }
