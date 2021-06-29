@@ -48,16 +48,16 @@ public class ProfileController {
     }
 
     // Delete profile in DB
-    @DeleteMapping("{profileId}")
-    public ResponseEntity<Object> deleteProfile(@PathVariable("profileId") String profileId) throws Exception {
+    @DeleteMapping("{profile_id}")
+    public ResponseEntity<Object> deleteProfile(@PathVariable("profile_id") String profileId) throws Exception {
         ResponseEntity<Object> response = profileService.deleteProfile(profileId);
         return response;
     }
 
     // Updates profile in DB
-    @GetMapping("/request-approval/{profileId}")
-    public ResponseEntity<Object> requestApproval(@PathVariable("profileId") String profileId) throws Exception {
-        ResponseEntity<Object> response = profileService.request(profileId);
+    @GetMapping("/request-approval")
+    public ResponseEntity<Object> requestApproval(@RequestParam String profile_id) throws Exception {
+        ResponseEntity<Object> response = profileService.request(profile_id);
         return response;
     }
 
