@@ -272,4 +272,37 @@ public class ProfileService {
         }
     }
 
+    public ResponseEntity<Object> approveProfile(String profileId) {
+        JSONObject responseObject = new JSONObject();
+
+        boolean flag = false;
+        List<Profile> profiles = profileRepository.findAll();
+        for(Profile profile: profiles ){
+            if(profile.getId().equals(profileId)){
+                flag = true;
+            }
+        }
+        if(!flag) {
+            responseObject.put("profile", "Profile doesn't exist");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseObject);
+        }
+
+        if(!validateInputs(profileId)){
+            responseObject.put("profile", "Profile is required");
+        }
+
+        if(responseObject.isEmpty()){
+            Profile profile = profileRepository.findProfileById(profileId);
+            profile.setProfileState(ProfileState.APPROVED);
+            profileRepository.save(profile);
+            responseObject.put("success", true);
+            responseObject.put("message","Profile APPROVED");
+
+            return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseObject);
+        }
+
+    }
+
 }
