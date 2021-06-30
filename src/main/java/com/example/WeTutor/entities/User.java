@@ -9,6 +9,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -101,4 +102,18 @@ public class User {
 //    public void setShow(Show show) {
 //        this.show.add(show);
 //    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(userName, user.userName) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(roles, user.roles) && Objects.equals(profile, user.profile) && Objects.equals(parentFeedbacks, user.parentFeedbacks) && Objects.equals(tutorFeedbacks, user.tutorFeedbacks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userName, password, email, roles, profile, parentFeedbacks, tutorFeedbacks);
+    }
 }
