@@ -1,8 +1,8 @@
 const profiles = [
     {
         _id:0,
-        firstname: "Terbinos",
-        lastname: "Getachew",
+        firstName: "Terbinos",
+        lastName: "Getachew",
         phonenumber: "+251910124556",
         gender: "Male",
         age: "26",

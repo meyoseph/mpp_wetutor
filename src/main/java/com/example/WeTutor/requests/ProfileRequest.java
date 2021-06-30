@@ -1,6 +1,6 @@
 package com.example.WeTutor.requests;
 
-import com.example.WeTutor.entities.Tutor;
+import com.example.WeTutor.entities.User;
 import lombok.*;
 
 
@@ -21,5 +21,6 @@ public class ProfileRequest {
     private final String educations;
     private final String workExperiences;
     private final String[] languages;
-    private final String tutor;
+    private final String profilePic;
+    private final String tutorId;
 }

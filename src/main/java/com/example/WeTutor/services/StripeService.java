@@ -1,6 +1,8 @@
 package com.example.WeTutor.services;
 
 import com.example.WeTutor.entities.Payment;
+import com.example.WeTutor.entities.Role;
+import com.example.WeTutor.entities.User;
 import com.example.WeTutor.repositories.SubscriptionRepository;
 import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.SubscriptionRequest;
@@ -15,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +32,13 @@ public class StripeService {
     private UserRepository userRepository;
 
     public ResponseEntity<Object> checkout(SubscriptionRequest subscriptionRequest, String stripePublicKey) {
+
+        // Validate subscription inputs
+        JSONObject validationResponse = validateInputs(subscriptionRequest);
+        if(!validationResponse.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResponse);
+        }
+
         Customer customer = null;
         Payment payment = subscriptionRepository.findPaymentByParentEmail(subscriptionRequest.getUserEmail());
 
@@ -50,6 +61,40 @@ public class StripeService {
         }
     }
 
+    private JSONObject validateInputs(SubscriptionRequest subscriptionRequest) {
+        JSONObject errorObject = new JSONObject();
+        if(!validationHelper(subscriptionRequest.getUserEmail())){
+            errorObject.put("email", "Email is required");
+        }
+        if(!validationHelper(subscriptionRequest.getCardNumber())){
+            errorObject.put("cardNumber", "Card number is required");
+        }
+        if(subscriptionRequest.getExpirationMonth() == 0){
+            errorObject.put("expirationMonth", "Expiration month is required");
+        }
+        if(subscriptionRequest.getExpirationYear() == 0){
+            errorObject.put("expirationYear", "Expiration year is required");
+        }
+        if(!validationHelper(subscriptionRequest.getCvc())){
+            errorObject.put("cvc", "CVC is required");
+        }
+        if(subscriptionRequest.getExpirationMonth() < 1 || subscriptionRequest.getExpirationMonth() > 12){
+            errorObject.put("expirationMonth", "Expiration month is invalid");
+        }
+        if(subscriptionRequest.getExpirationYear() < LocalDate.now().getYear()){
+            errorObject.put("expirationYear", "Card has already been expired!");
+        }
+        if(subscriptionRequest.getExpirationYear() == LocalDate.now().getYear() && subscriptionRequest.getExpirationMonth() < LocalDate.now().getMonthValue()){
+            errorObject.put("expirationYear", "Card has already been expired!");
+        }
+        return errorObject;
+    }
+
+    public boolean validationHelper(String input){
+        if(input == null || input == ""){
+            return false;
+        } else return true;
+    }
     public Customer createCustomer(String email, String stripePublicKey){
         Stripe.apiKey = stripePublicKey;
         Customer customer = null;
@@ -119,6 +164,12 @@ public class StripeService {
             Subscription.create(subscriptionParams);
             Payment payment = new Payment(email,customer.getId());
             subscriptionRepository.save(payment);
+            // Make parent account active
+            User user = userRepository.findByEmail(email);
+            Role role  = user.getRoles().get(0);
+            role.setActive(true);
+            boolean a = role.isActive();
+            userRepository.save(user);
             response.put("success",true);
             response.put("message","Subscription made successfully!");
             return ResponseEntity.status(HttpStatus.OK).body(response);

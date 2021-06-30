@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import isEmpty from "../../validation/is-empty";
 
-class MyProfile extends Component {
+class ProfileBody extends Component {
   render() {
     const { profile } = this.props;
 
@@ -32,7 +32,7 @@ class MyProfile extends Component {
                 <div className="col-4 col-md-3 m-auto">
                   <img
                     className="rounded-circle"
-                    src="https://www.gravatar.com/avatar/24fe3615bdba49bdf3e9ffb23f1b7bfd?s=200&r=pg&d=mm"
+                    src={profile.profilePic}
                     alt=""
                   />
                 </div>
@@ -93,4 +93,4 @@ class MyProfile extends Component {
   }
 }
 
-export default MyProfile;
+export default ProfileBody;

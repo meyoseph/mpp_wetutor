@@ -8,6 +8,7 @@ import SelectListGroup from "../common/SelectListGroup";
 import Select from "react-select";
 import { editProfile, getCurrentProfile } from "../../actions/profileActions";
 import isEmpty from "../../validation/is-empty";
+import S3 from "react-s3";
 
 class EditProfile extends Component {
   constructor(props) {
@@ -25,8 +26,13 @@ class EditProfile extends Component {
       workexperience: "",
       phonenumber: "",
       bio: "",
+      profilePic: "",
+      loading: false,
       errors: {},
     };
+
+    this.fileInput = React.createRef();
+
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -94,6 +100,7 @@ class EditProfile extends Component {
         workexperience: profile.workexperience,
         phonenumber: profile.phonenumber,
         bio: profile.bio,
+        tutorId: this.props.auth.userInfo.id,
       });
     }
   }
@@ -122,8 +129,29 @@ class EditProfile extends Component {
     });
     return subDefault;
   };
-  onSubmit(e) {
+  async onSubmit(e) {
+    this.setState({ loading: true });
     e.preventDefault();
+
+        // Make sure profile picture is uploaded and image source is loaded first
+    // Allow the tutor not to add his or her profile picture
+    if (this.fileInput.current.files.length > 0) {
+      let file = this.fileInput.current.files[0];
+      const config = {
+        bucketName: process.env.REACT_APP_S3_BUCKET_NAME,
+        region: process.env.REACT_APP_S3_REGION,
+        accessKeyId: process.env.REACT_APP_S3_ACCESS_ID,
+        secretAccessKey: process.env.REACT_APP_S3_ACCESS_KEY,
+      };
+      await S3.uploadFile(file, config)
+        .then((data) => {
+          console.log(data.location);
+          this.setState({ profilePic: data.location });
+        })
+        .catch((err) => {
+          this.setState({ errors: err.data });
+        });
+    }
 
     let lang = [];
     let subj = [];
@@ -143,7 +171,8 @@ class EditProfile extends Component {
       languages: lang,
       workExperiences: this.state.workexperience,
       motive: this.state.bio,
-      tutor: this.props.auth.userInfo.id,
+      profilePic: this.state.profilePic,
+      tutorId: this.props.auth.userInfo.id,
     };
     this.props.editProfile(profileData, this.props.history);
   }
@@ -368,6 +397,34 @@ class EditProfile extends Component {
                     info="Tell us a little bit about yourself"
                   />
                 </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6">
+                  <label for="exampleFormControlFile1">Select file</label>
+                  <input
+                    type="file"
+                    ref={this.fileInput}
+                    accept="image/png, image/gif, image/jpeg"
+                    class="form-control-file"
+                    id="exampleFormControlFile1"
+                  />
+                  <small className="form-text text-muted">
+                    Please select your profile pic
+                  </small>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-5"></div>
+                <div className="col-md-2">
+                  {this.state.loading && (
+                    <div className="spinner-border text-info " role="status">
+                      <span className="sr-only justify-content-center">
+                        Loading...
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-5"></div>
               </div>
               <input
                 type="submit"

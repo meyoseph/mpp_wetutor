@@ -1,15 +1,15 @@
 package com.example.WeTutor.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -21,6 +21,7 @@ public abstract class Role {
     private String id;
 
     protected String roleName;
+    protected boolean isActive;
 
     @ManyToMany(
             cascade = CascadeType.ALL,

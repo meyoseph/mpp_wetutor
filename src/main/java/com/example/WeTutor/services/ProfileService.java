@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,12 +28,17 @@ public class ProfileService {
         JSONObject responseObject = new JSONObject();
 
         List<Profile> profiles = profileRepository.findAll();
+        List<Profile> filteredProfiles = new ArrayList<Profile>();
+
         if(profiles != null){
-            responseObject.put("success",true);
-            responseObject.put("profiles", profiles);
-            return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+            for(Profile p: profiles){
+                if(p.getProfileState().equals("APPROVED")){
+                    filteredProfiles.add(p);
+                }
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(filteredProfiles);
         }else{
-            responseObject.put("error",true);
+            responseObject.put("profile",false);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseObject);
         }
 
@@ -53,6 +59,7 @@ public class ProfileService {
     public ResponseEntity<Object> getProfile() {
         JSONObject responseObject = new JSONObject();
         String tutorId = getLoggedInUserId();
+        User tutor = userRepository.findById(tutorId);
         Profile profile = profileRepository.findProfileByTutorId(tutorId);
 
         if(profile != null){
@@ -68,10 +75,10 @@ public class ProfileService {
         JSONObject responseObject = new JSONObject();
         String subjectsString = changeStringListToString(profileRequest.getSubjects());
         String languagesString = changeStringListToString(profileRequest.getLanguages());
-
+        User tutor = userRepository.findById(profileRequest.getTutorId());
         List<Profile> profiles = profileRepository.findAll();
         for(Profile profile: profiles ){
-            if(profile.getTutorId().equals(profileRequest.getTutor())){
+            if(profile.getTutor().equals(tutor)){
                 responseObject.put("profile", "Profile has already been built");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseObject);
             }
@@ -79,12 +86,18 @@ public class ProfileService {
         responseObject = validateAll(profileRequest);
 
         if(responseObject.isEmpty()){
+            String profilePic;
+            if(profileRequest.getProfilePic().equals("")){
+                profilePic = "https://www.gravatar.com/avatar/24fe3615bdba49bdf3e9ffb23f1b7bfd?s=200&r=pg&d=mm";
+            }else{
+                profilePic = profileRequest.getProfilePic();
+            }
             Profile profile = new Profile(profileRequest.getAge(), profileRequest.getFirstName(),
                     profileRequest.getLastName(), profileRequest.getGender(),
                     profileRequest.getPhoneNumber(), profileRequest.getLocation(),
                     profileRequest.getMotive(), profileRequest.getMajorSubject(),
                     subjectsString, profileRequest.getEducations(), profileRequest.getWorkExperiences(),
-                    languagesString, profileRequest.getTutor());
+                    languagesString, profilePic,tutor);
             profileRepository.save(profile);
             responseObject.put("success",true);
             responseObject.put("message","Profile created successfully");
@@ -98,12 +111,13 @@ public class ProfileService {
 
     public ResponseEntity<Object> updateProfile(ProfileRequest profileRequest) {
         JSONObject responseObject = new JSONObject();
+        User tutor = userRepository.findById(profileRequest.getTutorId());
         String subjectsString = changeStringListToString(profileRequest.getSubjects());
         String languagesString = changeStringListToString(profileRequest.getLanguages());
         boolean flag = false;
         List<Profile> profiles = profileRepository.findAll();
         for(Profile profile: profiles ){
-            if(profile.getTutorId().equals(profileRequest.getTutor())){
+            if(profile.getTutor().getId().equals(profileRequest.getTutorId())){
                 flag = true;
             }
         }
@@ -115,7 +129,13 @@ public class ProfileService {
         responseObject = validateAll(profileRequest);
 
         if(responseObject.isEmpty()){
-            Profile profile = profileRepository.findProfileByTutorId(profileRequest.getTutor());
+            String profilePic;
+            Profile profile = profileRepository.findProfileByTutorId(tutor.getId());
+            if(profileRequest.getProfilePic().equals("")){
+                profilePic = profile.getProfilePic();
+            }else{
+                profilePic = profileRequest.getProfilePic();
+            }
             profile.setAge(profileRequest.getAge());
             profile.setFirstName(profileRequest.getFirstName());
             profile.setLastName(profileRequest.getLastName());
@@ -128,7 +148,8 @@ public class ProfileService {
             profile.setEducations(profileRequest.getEducations());
             profile.setWorkExperiences(profileRequest.getWorkExperiences());
             profile.setLanguages(languagesString);
-            profile.setTutorId(profileRequest.getTutor());
+            profile.setProfilePic(profilePic);
+            profile.setTutor(tutor);
             profileRepository.save(profile);
             responseObject.put("success", true);
             responseObject.put("message","Profile updated successfully");
@@ -168,7 +189,7 @@ public class ProfileService {
         boolean flag = false;
         List<Profile> profiles = profileRepository.findAll();
         for(Profile profile: profiles ){
-            if(profile.getTutorId().equals(tutor_id)){
+            if(profile.getTutor().getId().equals(tutor_id)){
                 flag = true;
             }
         }
@@ -178,7 +199,8 @@ public class ProfileService {
         }
 
         if(responseObject.isEmpty()){
-            Profile profile = profileRepository.findProfileByTutorId(tutor_id);
+            User tutor = userRepository.findById(tutor_id);
+            Profile profile = profileRepository.findProfileByTutorId(tutor.getId());
 
             profileRepository.delete(profile);
             responseObject.put("success", true);
@@ -237,7 +259,7 @@ public class ProfileService {
         if(!validateInputs(languagesString)){
             responseObject.put("languages", "Languages are required");
         }
-        if(profileRequest.getTutor() == null){
+        if(profileRequest.getTutorId() == "" || profileRequest.getTutorId() == null){
             responseObject.put("tutor", "Tutor can not be null");
         }
 
@@ -270,5 +292,17 @@ public class ProfileService {
             response.put("message", "Approval request sent!");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
+    }
+
+    public ResponseEntity<Object> getProfileById(String tutorId) {
+        JSONObject response = new JSONObject();
+        User tutor = userRepository.findById(tutorId);
+        // Get profile using the tutor's id
+        Profile profile = profileRepository.findProfileByTutorId(tutor.getId());
+        if(profile == null){
+            response.put("profile","No profile for this tutor");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
 }

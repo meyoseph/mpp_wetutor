@@ -26,6 +26,13 @@ public class ProfileController {
         return response;
     }
 
+    // Get profile by tutor user name
+    @GetMapping("/{tutorId}")
+    public ResponseEntity<Object> getProfileByTutorId(@PathVariable("tutorId") String tutorId) throws Exception {
+        ResponseEntity<Object> response = profileService.getProfileById(tutorId);
+        return response;
+    }
+
     // Creates profile
     @PostMapping("/create-profile")
     public ResponseEntity<Object> createProfile(@RequestBody ProfileRequest profileRequest) {

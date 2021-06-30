@@ -29,7 +29,7 @@ class Dashboard extends Component {
           <div>
             <p className="lead text-muted">
               Welcome{" "}
-              <Link to={`/profile/${profile.handle}`}>{userInfo.userName}</Link>
+              <Link to={`/profile/${profile.tutorId}`}>{userInfo.userName}</Link>
             </p>
             <hr />
             <ToastProvider>
@@ -53,6 +53,7 @@ class Dashboard extends Component {
         dashboardContent = (
           <div>
             <p className="lead text-muted">Welcome {userInfo.userName}</p>
+            <hr/>
             <p>You have not yet set a profile, please add some info</p>
             <Link to="/create-profile" className="btn btn-lg btn-info">
               Create Profile
@@ -62,8 +63,8 @@ class Dashboard extends Component {
       }
     }
     return (
-      <div className="dashboard" style={{ height: "auto" }}>
-        <div className="container-fluid">
+      <div className="dashboard" style={{ height: "auto", marginBottom:"400px" }}>
+        <div className="container-fluid mt-4">
           <div className="row">
             <div className="col-md-12">
               <h1 className="display-4">Dashboard</h1>
