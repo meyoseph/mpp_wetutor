@@ -13,6 +13,12 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
+    @GetMapping("/")
+    public ResponseEntity<Object> getProfiles() throws Throwable {
+        ResponseEntity<Object> response = profileService.getProfiles();
+        return response;
+    }
+
     @GetMapping("/all")
     public ResponseEntity<Object> getAllProfiles() throws Throwable {
         ResponseEntity<Object> response = profileService.getAllProfiles();
