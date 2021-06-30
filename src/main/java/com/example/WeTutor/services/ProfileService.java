@@ -1,5 +1,6 @@
 package com.example.WeTutor.services;
 
+import com.example.WeTutor.DTO.ProfileDto;
 import com.example.WeTutor.entities.*;
 import com.example.WeTutor.repositories.ProfileRepository;
 import com.example.WeTutor.repositories.TutorRepository;
@@ -7,6 +8,7 @@ import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.ProfileRequest;
 import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +26,32 @@ public class ProfileService {
     ProfileRepository profileRepository;
     TutorRepository tutorRepository;
     UserRepository userRepository;
+
+    private ModelMapper modelMapper;
+
+    public ResponseEntity<Object> getProfiles() {
+        JSONObject responseObject = new JSONObject();
+
+        List<Profile> profiles = profileRepository.findAll();
+        List<ProfileDto> profileDto = mapList(profiles, ProfileDto.class);
+
+        if(profiles != null && profileDto != null){
+            responseObject.put("success",true);
+            responseObject.put("profiles", profileDto);
+            return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        }else{
+            responseObject.put("error",true);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseObject);
+        }
+
+    }
+
+    <S,T> List<T> mapList(List<S> source, Class<T> targetClass) {
+        return source
+                .stream()
+                .map(element -> modelMapper.map(element, targetClass))
+                .collect(Collectors.toList());
+    }
 
     public ResponseEntity<Object> getAllProfiles() {
         JSONObject responseObject = new JSONObject();

@@ -15,7 +15,14 @@ class Navbar extends Component {
 
   render() {
     const { isAuthenticated, user, userInfo } = this.props.auth;
+    const { profile } = this.props.profile;
+
     let homeLink = "dashboard";
+    let profileIcon = "https://www.gravatar.com/avatar/24fe3615bdba49bdf3e9ffb23f1b7bfd?s=200&r=pg&d=mm";
+
+    if(profile && profile.profilePic){
+      profileIcon = profile.profilePic;
+    }
 
     if (userInfo && userInfo.roles && userInfo.roles[0] !== undefined) {
       homeLink =
@@ -52,7 +59,7 @@ class Navbar extends Component {
             {/* {user.sub} */}
             <img
               className="rounded-circle"
-              src="https://www.gravatar.com/avatar/24fe3615bdba49bdf3e9ffb23f1b7bfd?s=200&r=pg&d=mm"
+              src={profileIcon}
               alt={user.name}
               style={{ width: "25px", marginRight: "5px" }}
               title="You must have a Gravatar connected to your email to display an image"
@@ -101,9 +108,11 @@ Navbar.propTypes = {
   clearCurrentProfile: PropTypes.func.isRequired,
   clearFullUserInfo: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 const mapStateProps = (state) => ({
   auth: state.auth,
+  profile: state.profile
 });
 export default connect(mapStateProps, {
   logoutUser,
