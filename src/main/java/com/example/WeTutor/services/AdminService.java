@@ -41,6 +41,7 @@ public class AdminService {
         }
         // Find the user object to activate his/her profile
         User user = userRepository.findById(userId);
+        String successMessage = "";
         if(user == null){
             response.put("status",false);
             response.put("message", "User with this id does not exist!");
@@ -48,14 +49,19 @@ public class AdminService {
         }
         // Activate / Deactivate the user based on the flag
         if(isApproved){
+            successMessage = "approved";
             user.getRoles().get(0).setActive(true);
+            profile.setProfileState(ProfileState.APPROVED);
         }else{
+            successMessage = "blocked";
             user.getRoles().get(0).setActive(false);
+            profile.setProfileState(ProfileState.BLOCKED);
         }
         // Save the user
         userRepository.save(user);
+        profileRepository.save(profile);
         response.put("status",true);
-        response.put("message", "Profile approved successfully!");
+        response.put("message", "Profile "+successMessage+" successfully!");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -67,6 +73,7 @@ public class AdminService {
             if(u.getRoles().get(0).getRoleName().equals("tutor")){
                 customTutorResponse.setUser(u);
                 customTutorResponse.setProfileState(getProfileState(u));
+                customTutorResponse.setProfileId(getProfileId(u));
                 tutors.add(customTutorResponse);
             }
         }
@@ -97,4 +104,13 @@ public class AdminService {
         }
     }
 
+    public String getProfileId(User tutor){
+        Profile profile = profileRepository.findProfileByTutorId(tutor.getId());
+
+        if(profile == null){
+            return null;
+        }else{
+            return profile.getId();
+        }
+    }
 }

@@ -63,10 +63,10 @@ const ProfileActions = (props) => {
         ) : (
           <button
             type="button"
-            className="btn btn-success"
+            className="btn btn-light"
             disabled
           >
-            <i className="fa fa-check text-info mr-1" />
+            <i className="fa fa-award text-info mr-1" />
             APPROVED
           </button>
         )}
@@ -112,7 +112,7 @@ const ProfileActions = (props) => {
                 class="btn btn-info"
                 onClick={handleRequest}
               >
-                Save changes
+                Request approval
               </button>
             </div>
           </div>
