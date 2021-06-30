@@ -21,10 +21,28 @@ class Login extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
-      this.props.getUserInfo(nextProps.auth.user.sub);
-      this.props.history.push("/dashboard");
+      let userType;
+      await this.props.getUserInfo();
+      if (
+        nextProps.auth.userInfo &&
+        nextProps.auth.userInfo.roles &&
+        nextProps.auth.userInfo.roles[0] !== undefined
+      ) {
+        userType =
+          nextProps.auth.userInfo && nextProps.auth.userInfo.roles[0].roleName;
+      }
+
+      if (userType === "tutor") {
+        this.props.history.push("/dashboard");
+      }
+      if (userType === "parent") {
+        this.props.history.push("/parent-dashboard");
+      }
+      if (userType === "admin") {
+        this.props.history.push("/admin-dashboard");
+      }
     }
 
     if (nextProps.errors) {
@@ -39,17 +57,15 @@ class Login extends Component {
       password: this.state.password,
     };
     this.props.loginUser(userData);
-    console.log("User credential", userData);
   }
   render() {
     const { errors } = this.state;
-    
-  console.log(errors);
+
     return (
       // Login
       <div
-        className="login shadow-lg p-3 mb-5 mt-5 ml-auto mr-auto bg-white rounded"
-        style={{ width: "700px", height: "400px" }}
+        className="login shadow-lg p-3 mt-5 ml-auto mr-auto bg-white rounded"
+        style={{ width: "700px", height: "400px", marginBottom: "160px" }}
       >
         <div className="container">
           <div className="row">
@@ -59,6 +75,12 @@ class Login extends Component {
                 Sign in to your WeTutor account
               </p>
               <hr style={{ width: "300px" }} />
+              {errors.credentials && (
+                <div class="alert alert-danger" role="alert">
+                  {errors.credentials}
+                </div>
+              )}
+
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="Email Address"
@@ -90,12 +112,12 @@ Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   getUserInfo: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
-}
+  errors: PropTypes.object.isRequired,
+};
 
-const mapStateToProps = ( state ) =>({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
-}) 
+  errors: state.errors,
+});
 
 export default connect(mapStateToProps, { loginUser, getUserInfo })(Login);

@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,8 +45,7 @@ public class LoginService {
                         new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
                 );
             } catch (Exception ex) {
-                responseObject.put("success",false);
-                responseObject.put("status","Unauthorized");
+                responseObject.put("credentials","Invalid credentials");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseObject);
             }
             String token = jwtUtil.generateToken(request.getEmail());
@@ -55,13 +56,33 @@ public class LoginService {
 
     }
 
-    public User loggedInUser(LoggedInUserRequest request) {
-        User user = repository.findByEmail(request.getEmail());
-        return user;
+    public String getLoggedInUserEmail(){
+        String username;
+        String email;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        email = repository.findByUserName(username).getEmail();
+        return email;
+    }
+
+    public ResponseEntity<Object> loggedInUser() {
+        JSONObject response = new JSONObject();
+        User user = repository.findByEmail(getLoggedInUserEmail());
+        if(user != null){
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }else{
+            response.put("success",false);
+            response.put("message", "No user found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     public boolean validateInputs(String input){
-        if(input == null){
+        if(input == null || input == ""){
             return false;
         } else return true;
     }

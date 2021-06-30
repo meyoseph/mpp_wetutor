@@ -1,7 +1,9 @@
 package com.example.WeTutor.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "USER_TBL")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,18 +25,35 @@ public class User {
     private String password;
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private AppUserRole appUserRole;
-
     @ManyToMany(mappedBy="users")
     @JsonManagedReference
     private List<Role> roles = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Profile profile;
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name="feedback_id", referencedColumnName = "feedback_id")
+    @JsonBackReference
+    private Feedback parentFeedbacks;
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name="feedback_id", referencedColumnName = "feedback_id")
+    @JsonBackReference
+    private Feedback tutorFeedbacks;
 
     public User(String userName, String password, String email,Role role) {
         this.userName = userName;
         this.password = password;
         this.email = email;
         this.roles.add(role);
+        this.profile = null;
     }
 
     public List<Role> getRoles() {
@@ -68,13 +88,6 @@ public class User {
         this.email = email;
     }
 
-    public AppUserRole getAppUserRole() {
-        return appUserRole;
-    }
-
-    public void setAppUserRole(AppUserRole appUserRole) {
-        this.appUserRole = appUserRole;
-    }
 
 //    public List<Rating> getRatings() {
 //        return ratings;

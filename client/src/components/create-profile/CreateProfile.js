@@ -6,8 +6,8 @@ import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import Select from "react-select";
 import SelectListGroup from "../common/SelectListGroup";
-import InputGroup from "../common/InputGroup";
 import { createProfile } from "../../actions/profileActions";
+import S3 from "react-s3";
 
 class CreateProfile extends Component {
   constructor(props) {
@@ -25,22 +25,11 @@ class CreateProfile extends Component {
       workexperience: "",
       phonenumber: "",
       bio: "",
-
-      displaySocialInputs: false,
-      // handle: "",
-      // company: "",
-      // website: "",
-      // location: "",
-      // status: "",
-      // skills: "",
-      // githubusername: "",
-      twitter: "",
-      facebook: "",
-      linkedin: "",
-      youtube: "",
-      instagram: "",
+      profilePic: "",
+      loading: false,
       errors: {},
     };
+    this.fileInput = React.createRef();
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -75,109 +64,55 @@ class CreateProfile extends Component {
     return temp2;
   };
 
-  onSubmit(e) {
+  async onSubmit(e) {
+    this.setState({ loading: true });
     e.preventDefault();
+
+    // Make sure profile picture is uploaded and image source is loaded first
+    // Allow the tutor not to add his or her profile picture
+    if (this.fileInput.current.files.length > 0) {
+      let file = this.fileInput.current.files[0];
+      const config = {
+        bucketName: process.env.REACT_APP_S3_BUCKET_NAME,
+        region: process.env.REACT_APP_S3_REGION,
+        accessKeyId: process.env.REACT_APP_S3_ACCESS_ID,
+        secretAccessKey: process.env.REACT_APP_S3_ACCESS_KEY,
+      };
+      await S3.uploadFile(file, config)
+        .then((data) => {
+          console.log(data.location);
+          this.setState({ profilePic: data.location });
+        })
+        .catch((err) => {
+          this.setState({ errors: err.data });
+        });
+    }
     let lang = [];
     let subj = [];
     lang = this.prepareData(this.state.languages);
     subj = this.prepareData(this.state.subjects);
-    console.log("lang", lang);
-    console.log("subj", subj);
     const profileData = {
-      firstname: this.state.firstname,
-      lastname: this.state.lastname,
-      phonenumber: this.state.phonenumber,
+      firstName: this.state.firstname,
+      lastName: this.state.lastname,
+      phoneNumber: this.state.phonenumber,
       gender: this.state.gender,
-      age: this.state.age,
-      majorsubject: this.state.majorsubject,
+      age: this.state.age.toString(),
+      majorSubject: this.state.majorsubject,
       location: this.state.location,
       subjects: subj,
-      education: this.state.education,
+      educations: this.state.education,
       languages: lang,
-      workexperience: this.state.workexperience,
-      bio: this.state.bio,
-
-      // twitter: this.state.twitter,
-      // facebook: this.state.facebook,
-      // linkedin: this.state.linkedin,
-      // youtube: this.state.youtube,
-      // instagram: this.state.instagram,
-
-      // handle: this.state.handle,
-      // company: this.state.company,
-      // website: this.state.website,
-      // location: this.state.location,
-      // status: this.state.status,
-      // skills: this.state.skills,
-      // githubusername: this.state.githubusername,
+      workExperiences: this.state.workexperience,
+      motive: this.state.bio,
+      profilePic: this.state.profilePic,
+      tutorId: this.props.auth.userInfo.id,
     };
-    console.log("Profile Data", profileData);
-    // this.props.createProfile(profileData, this.props.history);
+    this.props.createProfile(profileData, this.props.history);
+    this.setState({ loading: false });
   }
 
   render() {
-    const { errors, displaySocialInputs } = this.state;
-
-    let socialInputs;
-
-    if (displaySocialInputs) {
-      socialInputs = (
-        <div>
-          <InputGroup
-            placeholder="Twitter Profile URL"
-            name="twitter"
-            icon="fa fa-twitter"
-            value={this.state.twitter}
-            onChange={this.onChange}
-            error={errors.twitter}
-          />
-          <InputGroup
-            placeholder="Facebook Profile URL"
-            name="facebook"
-            icon="fa fa-facebook"
-            value={this.state.facebook}
-            onChange={this.onChange}
-            error={errors.facebook}
-          />
-          <InputGroup
-            placeholder="Linkedin Profile URL"
-            name="linkedin"
-            icon="fa fa-linkedin"
-            value={this.state.linkedin}
-            onChange={this.onChange}
-            error={errors.linkedin}
-          />
-          <InputGroup
-            placeholder="Youtube Profile URL"
-            name="youtube"
-            icon="fa fa-youtube"
-            value={this.state.youtube}
-            onChange={this.onChange}
-            error={errors.youtube}
-          />
-          <InputGroup
-            placeholder="Instagram Profile URL"
-            name="instagram"
-            icon="fa fa-instagram"
-            value={this.state.instagram}
-            onChange={this.onChange}
-            error={errors.instagram}
-          />
-        </div>
-      );
-    }
-    // Select options for status
-    const options = [
-      { label: "* Select Professinal Status", value: 0 },
-      { label: "Developer", value: "Developer" },
-      { label: "Junior Developer", value: "Junior Developer" },
-      { label: "Senior Developer", value: "Senior Developer" },
-      { label: "Manager", value: "Manager" },
-      { label: "Student or Learning", value: "Student or Learning" },
-      { label: "Instructor or Teacher", value: "Instructor or Teacher" },
-      { label: "Intern", value: "Intern" },
-      { label: "Other", value: "Other" },
-    ];
+    const { errors } = this.state;
 
     // Select options for Education
     const educationOptions = [
@@ -231,7 +166,7 @@ class CreateProfile extends Component {
     return (
       <div
         className="create-profile shadow-lg mb-5 mt-5 bg-white rounded"
-        style={{ width: "1200px", height: "800px" }}
+        style={{ width: "1200px", height: errors ? "980px" : "700px" }}
       >
         <div className="container">
           <div className="row">
@@ -253,7 +188,7 @@ class CreateProfile extends Component {
                     name="firstname"
                     value={this.state.firstname}
                     onChange={this.onChange}
-                    error={errors.firstname}
+                    error={errors.first_name}
                     info="Your first name"
                   />
                 </div>
@@ -263,7 +198,7 @@ class CreateProfile extends Component {
                     name="lastname"
                     value={this.state.lastname}
                     onChange={this.onChange}
-                    error={errors.lastname}
+                    error={errors.last_name}
                     info="Your last name"
                   />
                 </div>
@@ -275,7 +210,7 @@ class CreateProfile extends Component {
                     name="phonenumber"
                     value={this.state.phonenumber}
                     onChange={this.onChange}
-                    error={errors.phonenumber}
+                    error={errors.phone_number}
                     info="A phone number for your profile and for you to be called."
                   />
                 </div>
@@ -310,7 +245,7 @@ class CreateProfile extends Component {
                     value={this.state.education}
                     onChange={this.onChange}
                     options={educationOptions}
-                    error={errors.education}
+                    error={errors.educations}
                     info="Give us an idea of where you are at in your education"
                   />
                 </div>
@@ -322,7 +257,7 @@ class CreateProfile extends Component {
                     name="majorsubject"
                     value={this.state.majorsubject}
                     onChange={this.onChange}
-                    error={errors.majorsubject}
+                    error={errors.major_subject}
                     info="Please write your major subject(eg. English or Physics or Biology)"
                   />
                 </div>
@@ -347,8 +282,13 @@ class CreateProfile extends Component {
                     isMulti
                   />
                   <small className="form-text text-muted">
-                    Slect languages
+                    Select languages
                   </small>
+                  {errors.languages && (
+                    <small>
+                      <div style={{ color: "red" }}>{errors.languages}</div>
+                    </small>
+                  )}
                 </div>
                 <div className="col-md-6 mb-3">
                   <Select
@@ -360,6 +300,11 @@ class CreateProfile extends Component {
                   <small className="form-text text-muted">
                     Please select additional subjects
                   </small>
+                  {errors.subjects && (
+                    <small>
+                      <div style={{ color: "red" }}>{errors.subjects}</div>
+                    </small>
+                  )}
                 </div>
               </div>
               <div className="row">
@@ -370,7 +315,7 @@ class CreateProfile extends Component {
                     value={this.state.workexperience}
                     onChange={this.onChange}
                     options={workExperienceOptions}
-                    error={errors.workExperience}
+                    error={errors.work_experiences}
                     info="Give us an idea of how long you have worked"
                   />
                 </div>
@@ -380,123 +325,45 @@ class CreateProfile extends Component {
                     name="bio"
                     value={this.state.bio}
                     onChange={this.onChange}
-                    error={errors.bio}
+                    error={errors.motive}
                     info="Tell us a little bit about yourself"
                   />
                 </div>
               </div>
-              {socialInputs}
+              <div className="row">
+                <div className="col-md-6">
+                  <label for="exampleFormControlFile1">Select file</label>
+                  <input
+                    type="file"
+                    ref={this.fileInput}
+                    accept="image/png, image/gif, image/jpeg"
+                    class="form-control-file"
+                    id="exampleFormControlFile1"
+                  />
+                  <small className="form-text text-muted">
+                    Please select your profile pic
+                  </small>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-5"></div>
+                <div className="col-md-2">
+                  {this.state.loading && (
+                    <div className="spinner-border text-info " role="status">
+                      <span className="sr-only justify-content-center">
+                        Loading...
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-5"></div>
+              </div>
               <input
                 type="submit"
                 value="Submit"
                 className="btn btn-info btn-block mt-4 mb-5"
               />
             </form>
-            {/* <div className="row">
-              <form onSubmit={this.onSubmit}>
-                <div className="row">
-                  <div className="col-md-6">
-                    <TextFieldGroup
-                      placeholder="First name"
-                      name="firstName"
-                      value={this.state.firstname}
-                      onChange={this.onChange}
-                      error={errors.firstname}
-                      info="Your first name"
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <TextFieldGroup
-                      placeholder="Last name"
-                      name="lastName"
-                      value={this.state.lastname}
-                      onChange={this.onChange}
-                      error={errors.lastname}
-                      info="Your last name"
-                    />
-                  </div>
-                </div>
-                <TextAreaFieldGroup
-                  placeholder="* Phone Number"
-                  name="phonenumber"
-                  value={this.state.phonenumber}
-                  onChange={this.onChange}
-                  error={errors.phonenumber}
-                  info="A phone number for your profile and for you to be called."
-                />
-                <TextFieldGroup
-                  placeholder="* Subjects"
-                  name="subjects"
-                  value={this.state.subjects}
-                  onChange={this.onChange}
-                  error={errors.subjects}
-                  info="Please use comman separated values (eg. English,Physics,Biology)"
-                />
-                <SelectListGroup
-                  placeholder="Education"
-                  name="education"
-                  value={this.state.education}
-                  onChange={this.onChange}
-                  options={educationOptions}
-                  error={errors.education}
-                  info="Give us an idea of where you are at in your education"
-                />
-                <SelectListGroup
-                  placeholder="Exprience"
-                  name="workexperience"
-                  value={this.state.workexperience}
-                  onChange={this.onChange}
-                  options={workExperienceOptions}
-                  error={errors.workExperience}
-                  info="Give us an idea of how long you have worked"
-                />
-                <TextFieldGroup
-                  placeholder="Location"
-                  name="location"
-                  value={this.state.location}
-                  onChange={this.onChange}
-                  error={errors.location}
-                  info="City or city & state suggested (eg. Boston, MA)"
-                />
-                <SelectListGroup
-                  placeholder="Status"
-                  name="status"
-                  value={this.state.status}
-                  onChange={this.onChange}
-                  options={options}
-                  error={errors.status}
-                  info="Give us an idea of where you are at in your career"
-                />
-                <TextAreaFieldGroup
-                  placeholder="Short bio"
-                  name="bio"
-                  value={this.state.bio}
-                  onChange={this.onChange}
-                  error={errors.bio}
-                  info="Tell us a little bit about yourself"
-                />
-                <div className="mb-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      this.setState((prevState) => ({
-                        displaySocialInputs: !prevState.displaySocialInputs,
-                      }));
-                    }}
-                    className="btn btn-light"
-                  >
-                    Add Social Network Links
-                  </button>
-                  <span className="text-muted"> Optional</span>
-                </div>
-                {socialInputs}
-                <input
-                  type="submit"
-                  value="Submit"
-                  className="btn btn-info btn-block mt-4 mb-5"
-                />
-              </form>
-            </div> */}
           </div>
         </div>
       </div>
@@ -505,11 +372,13 @@ class CreateProfile extends Component {
 }
 
 CreateProfile.propTypes = {
+  auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   profile: state.profile,
   errors: state.errors,
 });

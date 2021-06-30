@@ -1,9 +1,6 @@
 package com.example.WeTutor.services;
 
-import com.example.WeTutor.entities.Parent;
-import com.example.WeTutor.entities.Role;
-import com.example.WeTutor.entities.Tutor;
-import com.example.WeTutor.entities.User;
+import com.example.WeTutor.entities.*;
 import com.example.WeTutor.repositories.RoleRepository;
 import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.RegistrationRequest;
@@ -11,8 +8,6 @@ import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,8 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -53,27 +46,38 @@ public class UserService implements UserDetailsService {
         if(!validateInputs(request.getPassword())){
             errorObject.put("password", "Password is required");
         }
+        if(!validateInputs(request.getPassword2())){
+            errorObject.put("password2", "Password confirmation is required");
+        }
+        if(!request.getPassword().equals(request.getPassword2())){
+            errorObject.put("password2", "Password mismatch");
+        }
         if(!validateInputs(request.getRole())){
             errorObject.put("role", "Role is required");
         }
         if(errorObject.isEmpty()){
             Role role;
+            // Code to be modified later
             if(request.getRole().equals("parent")){
                 role = new Parent();
-            }else{
+            }
+            else if(request.getRole().equals("admin")){
+                role = new Admin();
+            }
+            else{
                 role = new Tutor();
             }
             List<Role> roles = roleRepository.findAll();
-            boolean roleExsits = false;
+            boolean roleExists = false;
             for(Role r: roles){
                 if(r.getRoleName().equals(role.getRoleName())){
-                    roleExsits = true;
+                    roleExists = true;
                     role = r;
                     break;
                 }
             }
 
-            if(!roleExsits){
+            if(!roleExists){
                 roleRepository.save(role);
             }
 
@@ -92,8 +96,9 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean validateInputs(String input){
-        if(input == null){
+        if(input == null || input == ""){
             return false;
         } else return true;
     }
+
 }
