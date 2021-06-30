@@ -1,5 +1,6 @@
 package com.example.WeTutor.controllers;
 
+import com.example.WeTutor.requests.FeedbackRequest;
 import com.example.WeTutor.requests.TutorRequest;
 import com.example.WeTutor.services.TutorService;
 import com.example.WeTutor.services.RegistrationService;
@@ -24,6 +25,13 @@ public class TutorController {
     @GetMapping("/")
     public ResponseEntity<Object> getTutor(@RequestParam String tutor_id) throws Exception {
         ResponseEntity<Object> response = tutorService.getTutor(tutor_id);
+        return response;
+    }
+
+    // Creates tutor
+    @PostMapping("/rate-tutor")
+    public ResponseEntity<Object> rateTutor(@RequestBody FeedbackRequest feedbackRequest) throws Exception {
+        ResponseEntity<Object> response = tutorService.rateTutor(feedbackRequest);
         return response;
     }
 
