@@ -4,7 +4,6 @@ img {
 
 .landing {
   position: relative;
-  background: url('./assets/img/showcase.jpg') no-repeat;
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -295,7 +294,7 @@ img {
   .social {
       position: relative;
       left: -110%;
-      top: px
+      top: 0px;
   }
 
   #email,

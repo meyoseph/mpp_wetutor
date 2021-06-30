@@ -57,8 +57,7 @@ public class LoginService {
     }
 
     public User loggedInUser(LoggedInUserRequest request) {
-        Optional<User> optionalUser = repository.findByEmail(request.getEmail());
-        User user = optionalUser.get();
+        User user = repository.findByEmail(request.getEmail());
         return user;
     }
 

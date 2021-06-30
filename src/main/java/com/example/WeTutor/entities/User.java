@@ -93,18 +93,18 @@ public class User {
         this.appUserRole = appUserRole;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(user_id, user.user_id) && Objects.equals(userName, user.userName) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && appUserRole == user.appUserRole && Objects.equals(roles, user.roles);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(user_id, userName, password, email, appUserRole, roles);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof User)) return false;
+//        User user = (User) o;
+//        return Objects.equals(user_id, user.user_id) && Objects.equals(userName, user.userName) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && appUserRole == user.appUserRole && Objects.equals(roles, user.roles);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(user_id, userName, password, email, appUserRole, roles);
+//    }
 
     //    public List<Rating> getRatings() {
 //        return ratings;
