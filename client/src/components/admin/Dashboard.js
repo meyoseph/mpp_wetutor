@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-
+import { ToastProvider } from "react-toast-notifications";
 import { getAllTutors, getAllParents } from "../../actions/authActions";
 import TutorList from "./TutorList";
 import ParentList from "./ParentList";
@@ -27,17 +27,22 @@ class Dashboard extends Component {
     const { activeLink } = this.state;
     let tableContent =
       activeLink === "tutors" ? (
-        <TutorList allTutors={allTutors} />
+        <ToastProvider>
+          <TutorList allTutors={allTutors}/>
+        </ToastProvider>
       ) : (
         <ParentList allParents={allParents} />
       );
     return (
-      <div className="dashboard mt-5" style={{ height: "auto", marginBottom:"400px" }}>
+      <div
+        className="dashboard mt-5"
+        style={{ height: "auto", marginBottom: "400px" }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-md-12">
               <h1 className="display-4 mb-3">Dashboard</h1>
-              <hr/>
+              <hr />
               <div className="btn-group mb-4">
                 <button
                   onClick={() => this.changeActiveLink("tutors")}

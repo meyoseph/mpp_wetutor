@@ -2,34 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Spinner from "../common/spinner";
-import { getProfiles } from "../../actions/profileActions";
-import ProfileItem from "./ProfileItem";
+import { getTutorsProfile } from "../../actions/profileActions";
+import LandingProfileItem from "./LandingProfileItem";
 
 // import profiles from "./mockProfileData";
 
-export const filter = (list, search) =>
-  list &&
-  list.filter((d) => {
-    let values = [];
-    values.push(d.lawyer.first_name);
-    values.push(d.lawyer.last_name);
-    values.push(...Object.values(d.legal_fields));
-    console.log("values", values);
-
-    for (let i = 0; i < values.length; i++) {
-      if (
-        values[i] &&
-        values[i]
-          .toString()
-          .toLocaleLowerCase()
-          .includes(search.toLocaleLowerCase())
-      )
-        return true;
-    }
-    return false;
-  });
-
-class Profiles extends Component {
+class LandingProfiles extends Component {
   constructor() {
     super();
     this.state = {
@@ -38,7 +16,7 @@ class Profiles extends Component {
     this.onChange = this.onChange.bind(this);
   }
   componentDidMount() {
-    this.props.getProfiles();
+    this.props.getTutorsProfile();
   }
 
   onChange(e) {
@@ -46,11 +24,11 @@ class Profiles extends Component {
   }
 
   render() {
-    const { profiles, loading } = this.props.profile;
+    const { customProfiles, loading } = this.props.profile;
     const { isAuthenticated } = this.props.auth;
     let filteredTutors =
       this.state.searchInput.length > 0
-        ? profiles.filter((i) => {
+        ? customProfiles.filter((i) => {
             let firstSearchValue =
               i.firstName && i.firstName.toLocaleLowerCase();
             let secondSearchValue =
@@ -75,49 +53,30 @@ class Profiles extends Component {
               ) !== -1;
             return response;
           })
-        : profiles;
+        : customProfiles;
     let profileContent;
 
-    if (profiles === null || loading) {
+    if (customProfiles === null || loading) {
       profileContent = <Spinner />;
     } else {
-      if (profiles.length > 0) {
+      if (customProfiles.length > 0) {
         profileContent = filteredTutors.map((profile) => (
-          <ProfileItem
-            key={profile.id}
-            profile={profile}
-            isAuthenticated={isAuthenticated}
-          />
+          <LandingProfileItem key={profile.id} profile={profile} isAuthenticated={isAuthenticated} />
         ));
       } else {
-        profileContent = (
-          <div>
-            <h4
-              style={{
-                width: "200px",
-                margin: "auto",
-                marginTop: "100px",
-                display: "block",
-              }}
-            >
-              No tutors found ...
-            </h4>
-          </div>
-        );
+        profileContent = <div><h4 style={{ width: '200px',margin: 'auto', marginTop:"100px",marginBottom:"200px", display: 'block' }}>No tutors found ...</h4></div>;
       }
     }
     return (
       <div className="profiles">
-        <div className="container-fluid" sytle={{ height: "800px" }}>
+        <div className="container-fluid" sytle={{height:"800px"}}>
           <div className="row">
             <div className="col-md-12 mt-4">
               <h1 className="display-4 text-center">Find tutors here</h1>
               <p className="lead text-center">Browse and contact with tutors</p>
               <div className="row">
                 <div className="input-group col-md-12 mb-3">
-                  <span class="input-group-text" id="basic-addon1">
-                    <i class="fas fa-search"></i>
-                  </span>
+                  <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
                   <input
                     value={this.state.searchInput}
                     className="form-control mt-0"
@@ -149,9 +108,9 @@ class Profiles extends Component {
     );
   }
 }
-Profiles.propTypes = {
+LandingProfiles.propTypes = {
   auth: PropTypes.object.isRequired,
-  getProfiles: PropTypes.func.isRequired,
+  getTutorsProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
 };
 
@@ -160,4 +119,4 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
-export default connect(mapStateToProps, { getProfiles })(Profiles);
+export default connect(mapStateToProps, { getTutorsProfile })(LandingProfiles);

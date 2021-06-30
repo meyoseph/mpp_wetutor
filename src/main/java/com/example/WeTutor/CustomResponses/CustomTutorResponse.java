@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class CustomTutorResponse {
     private User user;
     private ProfileState profileState;
+    private String profileId;
 }

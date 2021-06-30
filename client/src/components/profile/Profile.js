@@ -20,8 +20,19 @@ class Profile extends Component {
   }
   render() {
     const { profile, loading } = this.props.profile;
+    const { userInfo } = this.props.auth;
 
     let profileContent;
+
+    let homeLink = "/dashboard";
+    if (userInfo && userInfo.roles && userInfo.roles[0] !== undefined) {
+      homeLink =
+        userInfo.roles[0].roleName === "admin"
+          ? "/admin-dashboard"
+          : userInfo.roles[0].roleName === "parent"
+          ? "/parent-dashboard"
+          : "/dashboard";
+    }
 
     if (profile === null || loading) {
       profileContent = <Spinner />;
@@ -30,8 +41,8 @@ class Profile extends Component {
         <div>
           <div className="row">
             <div className="col-md-6">
-              <Link to="/dashboard" className="btn btn-light mb3 float-light">
-                Back To Profiles
+              <Link to={homeLink} className="btn btn-light mb3 float-light">
+                Back back
               </Link>
             </div>
             <div className="col-md-6" />
@@ -55,11 +66,13 @@ class Profile extends Component {
 
 Profile.propTypes = {
   getProfileByTutorId: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  profile: state.profile,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps, { getProfileByTutorId })(Profile);

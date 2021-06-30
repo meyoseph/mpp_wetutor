@@ -1,6 +1,7 @@
 package com.example.WeTutor.DTO;
 
 import com.example.WeTutor.entities.ProfileState;
+import com.example.WeTutor.entities.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +22,8 @@ public class ProfileDto {
     private String educations;
     private String workExperiences;
     private String languages;
+    private String profilePic;
     @Enumerated(EnumType.STRING)
     private ProfileState profileState;
-    private String tutorId;
+    private User tutor;
 }
