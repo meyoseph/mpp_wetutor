@@ -17,6 +17,7 @@ public class Tutor extends Role{
 
     public Tutor(){
         this.roleName = "tutor";
+        isActive = false;
     }
 
 }

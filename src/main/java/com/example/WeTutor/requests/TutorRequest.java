@@ -1,7 +1,6 @@
 package com.example.WeTutor.requests;
 
 import com.example.WeTutor.entities.Profile;
-import com.example.WeTutor.entities.Tutor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

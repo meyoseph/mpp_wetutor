@@ -1,17 +1,13 @@
 package com.example.WeTutor.controllers;
 
-import com.example.WeTutor.entities.User;
 import com.example.WeTutor.requests.AuthRequest;
-import com.example.WeTutor.requests.LoggedInUserRequest;
 import com.example.WeTutor.requests.RegistrationRequest;
 import com.example.WeTutor.services.LoginService;
 import com.example.WeTutor.services.RegistrationService;
+import com.example.WeTutor.services.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +19,9 @@ public class UserController {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/")
     public String welcome() {
@@ -45,11 +44,11 @@ public class UserController {
     }
 
     // Retrieves the current logged in user
-    @PostMapping(path = "/current")
-    public User loggedInUser(@RequestBody LoggedInUserRequest request) throws Exception {
-        User user = loginService.loggedInUser(request);
+    @GetMapping(path = "/current")
+    public ResponseEntity<Object> loggedInUser() {
+        ResponseEntity<Object> user = loginService.loggedInUser();
         return user;
-
     }
+
 
 }

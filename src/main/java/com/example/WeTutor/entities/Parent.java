@@ -11,5 +11,6 @@ public class Parent extends Role{
 
     public Parent(){
         roleName = "parent";
+        isActive = false;
     }
 }

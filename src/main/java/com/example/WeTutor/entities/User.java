@@ -24,18 +24,19 @@ public class User {
     private String password;
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private AppUserRole appUserRole;
-
     @ManyToMany(mappedBy="users")
     @JsonManagedReference
     private List<Role> roles = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Profile profile;
 
     public User(String userName, String password, String email,Role role) {
         this.userName = userName;
         this.password = password;
         this.email = email;
         this.roles.add(role);
+        this.profile = null;
     }
 
     public List<Role> getRoles() {
@@ -70,13 +71,6 @@ public class User {
         this.email = email;
     }
 
-    public AppUserRole getAppUserRole() {
-        return appUserRole;
-    }
-
-    public void setAppUserRole(AppUserRole appUserRole) {
-        this.appUserRole = appUserRole;
-    }
 
 //    public List<Rating> getRatings() {
 //        return ratings;

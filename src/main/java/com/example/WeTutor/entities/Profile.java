@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -32,17 +33,24 @@ public class Profile {
     private String educations;
     private String workExperiences;
     private String languages;
+    private String profilePic;
 
     @Enumerated(EnumType.STRING)
     private ProfileState profileState;
 
-    private String tutorId;
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name="user_id", referencedColumnName = "id")
+    @JsonBackReference
+    private User tutor;
 
     public Profile(String age, String firstName,
                    String lastName, String gender, String phoneNumber,
                    String location, String motive, String majorSubject,
                    String subjects, String educations, String workExperiences,
-                   String languages, String tutor) {
+                   String languages, String profilePic, User tutor) {
         this.age = age;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -56,7 +64,8 @@ public class Profile {
         this.workExperiences = workExperiences;
         this.languages = languages;
         this.profileState = ProfileState.BEGINNING;
-        this.tutorId = tutor;
+        this.profilePic = profilePic;
+        this.tutor = tutor;
     }
 
 }

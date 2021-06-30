@@ -7,6 +7,7 @@ import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import Select from "react-select";
 import SelectListGroup from "../common/SelectListGroup";
 import { createProfile } from "../../actions/profileActions";
+import S3 from "react-s3";
 
 class CreateProfile extends Component {
   constructor(props) {
@@ -24,8 +25,11 @@ class CreateProfile extends Component {
       workexperience: "",
       phonenumber: "",
       bio: "",
+      profilePic: "",
+      loading: false,
       errors: {},
     };
+    this.fileInput = React.createRef();
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -60,8 +64,29 @@ class CreateProfile extends Component {
     return temp2;
   };
 
-  onSubmit(e) {
+  async onSubmit(e) {
+    this.setState({ loading: true });
     e.preventDefault();
+
+    // Make sure profile picture is uploaded and image source is loaded first
+    // Allow the tutor not to add his or her profile picture
+    if (this.fileInput.current.files.length > 0) {
+      let file = this.fileInput.current.files[0];
+      const config = {
+        bucketName: process.env.REACT_APP_S3_BUCKET_NAME,
+        region: process.env.REACT_APP_S3_REGION,
+        accessKeyId: process.env.REACT_APP_S3_ACCESS_ID,
+        secretAccessKey: process.env.REACT_APP_S3_ACCESS_KEY,
+      };
+      await S3.uploadFile(file, config)
+        .then((data) => {
+          console.log(data.location);
+          this.setState({ profilePic: data.location });
+        })
+        .catch((err) => {
+          this.setState({ errors: err.data });
+        });
+    }
     let lang = [];
     let subj = [];
     lang = this.prepareData(this.state.languages);
@@ -79,9 +104,11 @@ class CreateProfile extends Component {
       languages: lang,
       workExperiences: this.state.workexperience,
       motive: this.state.bio,
-      tutor: this.props.auth.userInfo.id
+      profilePic: this.state.profilePic,
+      tutorId: this.props.auth.userInfo.id,
     };
     this.props.createProfile(profileData, this.props.history);
+    this.setState({ loading: false });
   }
 
   render() {
@@ -139,7 +166,7 @@ class CreateProfile extends Component {
     return (
       <div
         className="create-profile shadow-lg mb-5 mt-5 bg-white rounded"
-        style={{ width: "1200px", height: errors ? "880px" : "700px" }}
+        style={{ width: "1200px", height: errors ? "980px" : "700px" }}
       >
         <div className="container">
           <div className="row">
@@ -257,7 +284,11 @@ class CreateProfile extends Component {
                   <small className="form-text text-muted">
                     Select languages
                   </small>
-                  {errors.languages && <small><div style={{color: "red"}}>{errors.languages}</div></small>}
+                  {errors.languages && (
+                    <small>
+                      <div style={{ color: "red" }}>{errors.languages}</div>
+                    </small>
+                  )}
                 </div>
                 <div className="col-md-6 mb-3">
                   <Select
@@ -269,7 +300,11 @@ class CreateProfile extends Component {
                   <small className="form-text text-muted">
                     Please select additional subjects
                   </small>
-                  {errors.subjects && <small><div style={{color: "red"}}>{errors.subjects}</div></small>}
+                  {errors.subjects && (
+                    <small>
+                      <div style={{ color: "red" }}>{errors.subjects}</div>
+                    </small>
+                  )}
                 </div>
               </div>
               <div className="row">
@@ -294,6 +329,34 @@ class CreateProfile extends Component {
                     info="Tell us a little bit about yourself"
                   />
                 </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6">
+                  <label for="exampleFormControlFile1">Select file</label>
+                  <input
+                    type="file"
+                    ref={this.fileInput}
+                    accept="image/png, image/gif, image/jpeg"
+                    class="form-control-file"
+                    id="exampleFormControlFile1"
+                  />
+                  <small className="form-text text-muted">
+                    Please select your profile pic
+                  </small>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-5"></div>
+                <div className="col-md-2">
+                  {this.state.loading && (
+                    <div className="spinner-border text-info " role="status">
+                      <span className="sr-only justify-content-center">
+                        Loading...
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-5"></div>
               </div>
               <input
                 type="submit"

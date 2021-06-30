@@ -2,17 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import ProfileHeader from "./ProfileHeader";
-import ProfileAbout from "./ProfileAbout";
-import ProfileCreds from "./ProfileCreds";
-import ProfileGithub from "./ProfileGithub";
 import Spinner from "../common/spinner";
-import { getProfileByHandle } from "../../actions/profileActions";
+import { getProfileByTutorId } from "../../actions/profileActions";
+import ProfileBody from "./ProfileBody";
 
 class Profile extends Component {
   componentDidMount() {
-    if (this.props.match.params.handle) {
-      this.props.getProfileByHandle(this.props.match.params.handle);
+    if (this.props.match.params.tutorId) {
+      this.props.getProfileByTutorId(this.props.match.params.tutorId);
     }
   }
 
@@ -33,26 +30,19 @@ class Profile extends Component {
         <div>
           <div className="row">
             <div className="col-md-6">
-              <Link to="/profiles" className="btn btn-light mb3 float-light">
+              <Link to="/dashboard" className="btn btn-light mb3 float-light">
                 Back To Profiles
               </Link>
             </div>
             <div className="col-md-6" />
           </div>
 
-          <ProfileHeader profile={profile} />
-          <ProfileAbout profile={profile} />
-          <ProfileCreds
-            education={profile.education}
-            experience={profile.experience}
-          />
-          {profile.githubusername ? (<ProfileGithub username = {profile.githubusername}/> ): null}
-          
+          <ProfileBody profile={profile}/>
         </div>
       );
     }
     return (
-      <div className="profile">
+      <div className="profile mt-4">
         <div className="container">
           <div className="row">
             <div className="col-md-12">{profileContent}</div>
@@ -64,7 +54,7 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-  getProfileByHandle: PropTypes.func.isRequired,
+  getProfileByTutorId: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired
 };
 
@@ -72,4 +62,4 @@ const mapStateToProps = state => ({
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { getProfileByHandle })(Profile);
+export default connect(mapStateToProps, { getProfileByTutorId })(Profile);

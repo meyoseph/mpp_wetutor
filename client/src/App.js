@@ -7,24 +7,34 @@ import {
   logoutUser,
   getUserInfo,
   clearFullUserInfo,
+  clearAllParents,
+  clearAllTutors
 } from "./actions/authActions";
 import { clearCurrentProfile } from "./actions/profileActions";
 
 import { Provider } from "react-redux";
-import PrivateRoute from "./components/common/PrivateRoute";
+import AdminProtected from "./components/common/AdminProtected";
+import ParentProtected from "./components/common/ParentProtected";
+import TutorProtected from "./components/common/TutorProtected";
 import store from "./store";
 
+import NotFound from "./components/not-found/NotFound";
 import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
 import CreateProfile from "./components/create-profile/CreateProfile";
 import Profiles from "./components/profiles/Profiles";
-// import Profile from './components/profile/Profile';
+import Profile from "./components/profile/Profile";
 import EditProfile from "./components/edit-profile/EditProfile";
-import Dashboard from "./components/dashboard/Dashboard";
+import SubscriptionForm from "./components/parent/SubscriptionForm";
 import Footer from "./components/layout/Footer";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import AdminDashboard from "./components/admin/Dashboard";
+import TutorDashboard from "./components/tutor/Dashboard";
+import ParentDashboard from "./components/parent/Dashboard";
+import { ToastProvider } from "react-toast-notifications";
 import "./App.css";
+import test from "./components/test";
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -34,7 +44,7 @@ if (localStorage.jwtToken) {
   const decoded = jwt_decode(localStorage.jwtToken);
 
   // Get full user info
-  store.dispatch(getUserInfo(decoded.sub));
+  store.dispatch(getUserInfo());
   // Set user and isAuthenticated
   store.dispatch(setCurrentUser(decoded));
   // Check for expired token
@@ -46,6 +56,10 @@ if (localStorage.jwtToken) {
     store.dispatch(clearCurrentProfile());
     // Clear current user info
     store.dispatch(clearFullUserInfo());
+    //Clear all parents
+    store.dispatch(clearAllParents());
+    // Clear all tutors
+    store.dispatch(clearAllTutors());
     // Redirect to login
     window.location.href = "/login";
   }
@@ -59,41 +73,71 @@ class App extends Component {
           <div className="App">
             <Navbar />
             <Route exact path="/" component={Landing} />
+            <Route exact path="/test" component={test} />
             <div className="container">
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/profiles" component={Profiles} />
               {/* <Route exact path ="/profile/:handle" component={ Profile }/> */}
               <Switch>
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <AdminProtected
+                  exact
+                  path="/admin-dashboard"
+                  component={AdminDashboard}
+                />
               </Switch>
               <Switch>
-                <PrivateRoute
+                <ParentProtected
+                  exact
+                  path="/parent-dashboard"
+                  component={ParentDashboard}
+                />
+              </Switch>
+              <Switch>
+                <TutorProtected
+                  exact
+                  path="/dashboard"
+                  component={TutorDashboard}
+                />
+              </Switch>
+
+              <Switch>
+                <TutorProtected
                   exact
                   path="/create-profile"
                   component={CreateProfile}
                 />
               </Switch>
               <Switch>
-                <PrivateRoute
+                <TutorProtected
                   exact
                   path="/edit-profile"
                   component={EditProfile}
                 />
               </Switch>
-              {/* <Switch>
-                <PrivateRoute exact path ="/add-experience" component={ AddExperience }/>
-              </Switch> */}
-              {/* <Switch>
-                <PrivateRoute exact path ="/add-education" component={ AddEducation }/>
-              </Switch> */}
+              <ToastProvider>
+                <Switch>
+                  <ParentProtected
+                    exact
+                    path="/subscribe"
+                    component={SubscriptionForm}
+                  />
+                </Switch>
+              </ToastProvider>
+              <Switch>
+                <ParentProtected
+                  exact
+                  path="/profile/:tutorId"
+                  component={Profile}
+                />
+              </Switch>
               {/* <Switch>
                 <PrivateRoute exact path ="/post/:id" component={ Post }/>
               </Switch> */}
               {/* <Switch>
                 <PrivateRoute exact path ="/feed" component={ Posts }/>
               </Switch> */}
-              {/* <Route exact path ="/not-found" component={ NotFound }/> */}
+              <Route exact path ="/not-found" component={ NotFound }/>
             </div>
             <Footer />
           </div>

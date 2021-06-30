@@ -5,7 +5,7 @@ import Spinner from "../common/spinner";
 import { getProfiles } from "../../actions/profileActions";
 import ProfileItem from "./ProfileItem";
 
-import profiles from "./mockProfileData";
+// import profiles from "./mockProfileData";
 
 export const filter = (list, search) =>
   list &&
@@ -46,15 +46,19 @@ class Profiles extends Component {
   }
 
   render() {
-    // const { profiles, loading } = this.props.profile;
-
+    const { profiles, loading } = this.props.profile;
+    const { isAuthenticated } = this.props.auth;
     let filteredTutors =
       this.state.searchInput.length > 0
         ? profiles.filter((i) => {
             let firstSearchValue =
-              i.firstname && i.firstname.toLocaleLowerCase();
+              i.firstName && i.firstName.toLocaleLowerCase();
             let secondSearchValue =
-              i.lastname && i.lastname.toLocaleLowerCase();
+              i.lastName && i.lastName.toLocaleLowerCase();
+            let thirdSearchValue =
+              i.educations && i.educations.toLocaleLowerCase();
+            let forthSearchValue =
+              i.workExperiences && i.workExperiences.toLocaleLowerCase();
 
             let response =
               firstSearchValue.indexOf(
@@ -62,11 +66,16 @@ class Profiles extends Component {
               ) !== -1 ||
               secondSearchValue.indexOf(
                 this.state.searchInput.toLocaleLowerCase()
+              ) !== -1 ||
+              thirdSearchValue.indexOf(
+                this.state.searchInput.toLocaleLowerCase()
+              ) !== -1 ||
+              forthSearchValue.indexOf(
+                this.state.searchInput.toLocaleLowerCase()
               ) !== -1;
             return response;
           })
         : profiles;
-    let loading = false;
     let profileContent;
 
     if (profiles === null || loading) {
@@ -74,7 +83,7 @@ class Profiles extends Component {
     } else {
       if (profiles.length > 0) {
         profileContent = filteredTutors.map((profile) => (
-          <ProfileItem key={profile._id} profile={profile} />
+          <ProfileItem key={profile.id} profile={profile} isAuthenticated={isAuthenticated} />
         ));
       } else {
         profileContent = <h4>No profiles found ...</h4>;
@@ -82,24 +91,25 @@ class Profiles extends Component {
     }
     return (
       <div className="profiles">
-        <div className="container">
+        <div className="container-fluid" sytle={{height:"800px"}}>
           <div className="row">
-            <div className="col-md-12">
-              <h1 className="display-4 text-center">Tutor Profile</h1>
+            <div className="col-md-12 mt-4">
+              <h1 className="display-4 text-center">Find tutors here</h1>
               <p className="lead text-center">Browse and contact with tutors</p>
               <div className="row">
-                <div className="col-md-9">
+                <div className="input-group col-md-12 mb-3">
+                  <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
                   <input
                     value={this.state.searchInput}
                     className="form-control mt-0"
                     name="searchInput"
                     onChange={this.onChange}
                     type="search"
-                    placeholder="Live Search using name"
+                    placeholder="Live Search using name, education level or work experience"
                     aria-label="Search"
                   />
                 </div>
-                <div
+                {/* <div
                   className="col-md-3"
                   style={{ marginLeft: "0px", marginTop: "9px" }}
                 >
@@ -110,7 +120,7 @@ class Profiles extends Component {
                   >
                     Search
                   </button>
-                </div>
+                </div> */}
               </div>
               {profileContent}
             </div>
@@ -121,11 +131,13 @@ class Profiles extends Component {
   }
 }
 Profiles.propTypes = {
+  auth: PropTypes.object.isRequired,
   getProfiles: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   profile: state.profile,
 });
 

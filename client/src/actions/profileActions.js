@@ -69,10 +69,10 @@ export const clearCurrentProfile = () => {
 };
 
 // Get profile by handle
-export const getProfileByHandle = (handle) => (dispatch) => {
+export const getProfileByTutorId = (tutorId) => (dispatch) => {
   dispatch(setProfileLoading());
   axios
-    .get(`/api/profile/handle/${handle}`)
+    .get(`/api/profile/${tutorId}`)
     .then((res) =>
       dispatch({
         type: GET_PROFILE,

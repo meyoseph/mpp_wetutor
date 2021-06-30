@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CLEAR_ERRORS, GET_ERRORS, SET_CURRENT_USER, SET_CURRENT_USER_INFO, CLEAR_CURRENT_USER_INFO } from './types';
+import { CLEAR_ERRORS, GET_ERRORS, SET_CURRENT_USER, SET_CURRENT_USER_INFO, CLEAR_CURRENT_USER_INFO, GET_ALL_TUTORS, GET_ALL_PARENTS, CLEAR_ALL_PARENTS, CLEAR_ALL_TUTORS } from './types';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 // Register User
@@ -44,20 +44,49 @@ export const setCurrentUser = ( decoded ) => {
 }
 
 // Get full logged in user info
-export const getUserInfo  = userEmail => dispatch => {
-    axios.post('/api/current', {email: userEmail})
+export const getUserInfo  = () => dispatch => {
+    axios.get('/api/current')
         .then(res => dispatch({
             type: SET_CURRENT_USER_INFO,
             payload: res.data
         })
         )
         .catch(err => dispatch ({
-            type: SET_CURRENT_USER_INFO,
-            payload: null
+            type: GET_ERRORS,
+            payload: err.response.data
         })
     ) ;
 };
 
+// Get all tutors
+export const getAllTutors  = () => dispatch => {
+    axios.get('/api/admin/all-tutors')
+        .then(res => dispatch({
+            type: GET_ALL_TUTORS,
+            payload: res.data
+        })
+        )
+        .catch(err => dispatch ({
+            type: GET_ERRORS,
+            payload: err.response.data
+        })
+    ) ;
+};
+
+// Get full logged in user info
+export const getAllParents = () => dispatch => {
+    axios.get('/api/admin/all-parents')
+        .then(res => dispatch({
+            type: GET_ALL_PARENTS,
+            payload: res.data
+        })
+        )
+        .catch(err => dispatch ({
+            type: GET_ERRORS,
+            payload: err.response.data
+        })
+    ) ;
+};
 
 // Log user out 
 export const logoutUser = () => dispatch => {
@@ -68,11 +97,29 @@ export const logoutUser = () => dispatch => {
     // Set current user to {} which will set isAuthenticated to false 
     dispatch(setCurrentUser({}))
 
+    // Clear all parents and tutors in state
+    dispatch(clearAllParents());
+    dispatch(clearAllTutors());
+
 }
 
-// Clear Profile
+// Clear User information
 export const clearFullUserInfo = () => {
     return {
       type: CLEAR_CURRENT_USER_INFO,
     };
-  };
+};
+
+// Clear All Tutors
+export const clearAllTutors= () => {
+    return {
+      type: CLEAR_ALL_TUTORS,
+    };
+};
+
+// Clear All parents
+export const clearAllParents= () => {
+    return {
+      type: CLEAR_ALL_PARENTS,
+    };
+};

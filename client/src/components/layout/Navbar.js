@@ -14,7 +14,17 @@ class Navbar extends Component {
   }
 
   render() {
-    const { isAuthenticated, user } = this.props.auth;
+    const { isAuthenticated, user, userInfo } = this.props.auth;
+    let homeLink = "dashboard";
+
+    if (userInfo && userInfo.roles && userInfo.roles[0] !== undefined) {
+      homeLink =
+        userInfo.roles[0].roleName === "admin"
+          ? "admin-dashboard"
+          : userInfo.roles[0].roleName === "parent"
+          ? "parent-dashboard"
+          : "dashboard";
+    }
 
     const guestLinks = (
       <ul className="navbar-nav ml-auto">
@@ -57,10 +67,7 @@ class Navbar extends Component {
       // <!-- Navbar -->
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
-          <Link
-            className="navbar-brand"
-            to={isAuthenticated ? "/dashboard" : "/"}
-          >
+          <Link className="navbar-brand" to={isAuthenticated ? homeLink : "/"}>
             WeTutor
           </Link>
           <button
@@ -98,4 +105,8 @@ Navbar.propTypes = {
 const mapStateProps = (state) => ({
   auth: state.auth,
 });
-export default connect(mapStateProps, { logoutUser, clearCurrentProfile, clearFullUserInfo })(Navbar);
+export default connect(mapStateProps, {
+  logoutUser,
+  clearCurrentProfile,
+  clearFullUserInfo,
+})(Navbar);
