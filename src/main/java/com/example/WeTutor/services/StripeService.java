@@ -61,7 +61,7 @@ public class StripeService {
         }
     }
 
-    private JSONObject validateInputs(SubscriptionRequest subscriptionRequest) {
+    public JSONObject validateInputs(SubscriptionRequest subscriptionRequest) {
         JSONObject errorObject = new JSONObject();
         if(!validationHelper(subscriptionRequest.getUserEmail())){
             errorObject.put("email", "Email is required");
