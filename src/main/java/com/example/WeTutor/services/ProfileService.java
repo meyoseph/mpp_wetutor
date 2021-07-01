@@ -3,12 +3,14 @@ package com.example.WeTutor.services;
 import com.example.WeTutor.DTO.ProfileDto;
 import com.example.WeTutor.entities.*;
 import com.example.WeTutor.repositories.ProfileRepository;
+import com.example.WeTutor.repositories.ProfileRepositoryElasticSearch;
 import com.example.WeTutor.repositories.TutorRepository;
 import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.ProfileRequest;
 import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,12 +18,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ProfileService {
+	
+	@Autowired
+	ProfileRepositoryElasticSearch profileRepositoryElasticSearch;
 
     ProfileRepository profileRepository;
     TutorRepository tutorRepository;
@@ -334,4 +340,44 @@ public class ProfileService {
         }
         return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
+
+	public List<ResponseEntity<Object>> getProfileByTutorUserName(String tutorUserName) {
+		List<JSONObject> response = (List<JSONObject>) new JSONObject();
+		List<Profile> profile = profileRepositoryElasticSearch.findAllByUserName(tutorUserName);
+		if (profile.size() == 0) {
+			((HashMap) response).put("profile","no profile by this username");
+			return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+		return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.OK).body(profile);
+	}
+
+	public List<ResponseEntity<Object>> getProfileByTutorLocation(String tutorLocation) {
+		List<JSONObject> response = (List<JSONObject>) new JSONObject();
+		List<Profile> profile = profileRepositoryElasticSearch.getProfileByTutorLocation(tutorLocation);
+		if (profile.size() == 0) {
+			((HashMap) response).put("profile","no profile by this username");
+			return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+		return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.OK).body(profile);
+	}
+
+	public List<ResponseEntity<Object>> getProfileByTutorSubjects(String tutorSubjects) {
+		List<JSONObject> response = (List<JSONObject>) new JSONObject();
+		List<Profile> profile = profileRepositoryElasticSearch.getProfileByTutorSubjects(tutorSubjects);
+		if (profile.size() == 0) {
+			((HashMap) response).put("profile","no profile by this username");
+			return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+		return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.OK).body(profile);
+	}
+
+	public List<ResponseEntity<Object>> getProfileByTutorLanguages(String tutorLanguages) {
+		List<JSONObject> response = (List<JSONObject>) new JSONObject();
+		List<Profile> profile = profileRepositoryElasticSearch.getProfileByTutorLanguages(tutorLanguages);
+		if (profile.size() == 0) {
+			((HashMap) response).put("profile","no profile by this username");
+			return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+		return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.OK).body(profile);
+	}
 }
