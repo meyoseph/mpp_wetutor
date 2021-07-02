@@ -76,7 +76,7 @@ class Login extends Component {
               </p>
               <hr style={{ width: "300px" }} />
               {errors.credentials && (
-                <div class="alert alert-danger" role="alert">
+                <div className="alert alert-danger" role="alert">
                   {errors.credentials}
                 </div>
               )}

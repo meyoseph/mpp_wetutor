@@ -10,7 +10,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -29,24 +30,14 @@ public class User {
     @JsonManagedReference
     private List<Role> roles = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name="profile_id", referencedColumnName = "id")
+    @JsonBackReference
     private Profile profile;
 
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
-    )
-    @JoinColumn(name="feedback_id", referencedColumnName = "feedback_id")
-    @JsonBackReference
-    private Feedback parentFeedbacks;
-
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
-    )
-    @JoinColumn(name="feedback_id", referencedColumnName = "feedback_id")
-    @JsonBackReference
-    private Feedback tutorFeedbacks;
 
     public User(String userName, String password, String email,Role role) {
         this.userName = userName;
@@ -88,17 +79,4 @@ public class User {
         this.email = email;
     }
 
-
-//    public List<Rating> getRatings() {
-//        return ratings;
-//    }
-
-//    public void setRatings(List<Rating> ratings) {
-//        this.ratings = ratings;
-//    }
-
-//
-//    public void setShow(Show show) {
-//        this.show.add(show);
-//    }
 }

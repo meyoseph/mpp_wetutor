@@ -1,11 +1,7 @@
 package com.example.WeTutor.services;
 
-import com.example.WeTutor.entities.Feedback;
-import com.example.WeTutor.entities.Tutor;
-import com.example.WeTutor.entities.User;
-import com.example.WeTutor.repositories.FeedbackRepository;
-import com.example.WeTutor.repositories.TutorRepository;
-import com.example.WeTutor.repositories.UserRepository;
+import com.example.WeTutor.entities.*;
+import com.example.WeTutor.repositories.*;
 import com.example.WeTutor.requests.FeedbackRequest;
 import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
@@ -20,8 +16,10 @@ import java.util.List;
 public class TutorService {
 
     TutorRepository tutorRepository;
+    ParentRepository parentRepository;
     UserRepository userRepository;
     FeedbackRepository feedbackRepository;
+    ProfileRepository profileRepository;
 
     public ResponseEntity<Object> getAllTutors() {
         JSONObject responseObject = new JSONObject();
@@ -56,16 +54,39 @@ public class TutorService {
         if(!validateInputs(feedbackRequest.getRating()+""))
             responseObject.put("rating", "Rating is required");
 
-        User tutor = userRepository.findByEmail(feedbackRequest.getTutor());
-        User parent = userRepository.findByEmail(feedbackRequest.getParent());
+        int ratings = 0;
+        int ratedByCounter = 0;
+        Tutor tutor = tutorRepository.findTutorByEmail(feedbackRequest.getTutorEmail());
+        Parent parent = parentRepository.findParentByEmail(feedbackRequest.getParentEmail());
 
+        User user = userRepository.findByEmail(feedbackRequest.getTutorEmail());
+
+        Profile profile = profileRepository.findProfileByTutorId(user.getId());
+
+        if(profile == null){
+            responseObject.put("success",false);
+            responseObject.put("message","You can not give rating for a tutor with no profile!");
+
+            return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        }
         Feedback feedback = new Feedback(parent, feedbackRequest.getRating(), tutor);
-
         feedbackRepository.save(feedback);
+
+        List<Feedback> feedbacks = feedbackRepository.findAll();
+        for(Feedback f: feedbacks){
+            if(f.getTutor().getEmail().equals(feedbackRequest.getTutorEmail())){
+                ratings += f.getRating();
+                ratedByCounter++;
+            }
+        }
+
+        profile.setRating(ratings / ratedByCounter);
+        profile.setRatedBy(ratedByCounter);
+
+        profileRepository.save(profile);
+
         responseObject.put("success",true);
         responseObject.put("message","Rating created successfully");
-        responseObject.put("message2", parent);
-        responseObject.put("message3", tutor);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }

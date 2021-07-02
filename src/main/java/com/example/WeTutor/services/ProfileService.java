@@ -67,7 +67,7 @@ public class ProfileService {
 
         if(profiles != null){
             for(Profile p: profiles){
-                if(p.getProfileState().equals("APPROVED")){
+                if(p.getProfileState().equals(ProfileState.APPROVED)){
                     filteredProfiles.add(p);
                 }
             }

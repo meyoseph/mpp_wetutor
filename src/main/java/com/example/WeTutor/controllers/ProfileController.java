@@ -36,6 +36,7 @@ public class ProfileController {
     @GetMapping("/{tutorId}")
     public ResponseEntity<Object> getProfileByTutorId(@PathVariable("tutorId") String tutorId) throws Exception {
         ResponseEntity<Object> response = profileService.getProfileById(tutorId);
+        System.out.println("Profile response"+response);
         return response;
     }
 

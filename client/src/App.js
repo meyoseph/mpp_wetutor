@@ -8,7 +8,7 @@ import {
   getUserInfo,
   clearFullUserInfo,
   clearAllParents,
-  clearAllTutors
+  clearAllTutors,
 } from "./actions/authActions";
 import { clearCurrentProfile } from "./actions/profileActions";
 
@@ -123,14 +123,16 @@ class App extends Component {
                   />
                 </Switch>
               </ToastProvider>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/profile/:tutorId"
-                  component={Profile}
-                />
-              </Switch>
-              <Route exact path ="/not-found" component={ NotFound }/>
+              <ToastProvider>
+                <Switch>
+                  <PrivateRoute
+                    exact
+                    path="/profile/:tutorId"
+                    component={Profile}
+                  />
+                </Switch>
+              </ToastProvider>
+              <Route exact path="/not-found" component={NotFound} />
             </div>
             <Footer />
           </div>

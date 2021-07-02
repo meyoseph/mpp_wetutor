@@ -76,7 +76,7 @@ class LandingProfiles extends Component {
               <p className="lead text-center">Browse and contact with tutors</p>
               <div className="row">
                 <div className="input-group col-md-12 mb-3">
-                  <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                  <span className="input-group-text" id="basic-addon1"><i className="fas fa-search"></i></span>
                   <input
                     value={this.state.searchInput}
                     className="form-control mt-0"
@@ -92,7 +92,7 @@ class LandingProfiles extends Component {
                   style={{ marginLeft: "0px", marginTop: "9px" }}
                 >
                   <button
-                    class="btn btn-info"
+                    className="btn btn-info"
                     type="submit"
                     style={{ width: "100%" }}
                   >

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import isEmpty from "../../validation/is-empty";
+import Rating from '../common/Rating';
 
 class MyProfile extends Component {
   render() {
@@ -39,6 +40,9 @@ class MyProfile extends Component {
               </div>
               <div className="text-center">
                 <h1 className="display-4 text-center">{profile.firstName}{" "}{profile.lastName}</h1>
+                <Rating value={profile.rating} type="flex"/>
+                <small style={{color: "white"}}>Rated by{" "}{profile.ratedBy}{" "}people</small>
+                <hr style={{backgroundColor:"white", width:'300px'}}/>
                 <p className="lead text-center">
                   {profile.status}{" "}
                   {isEmpty(profile.gender) ? null : (
@@ -46,7 +50,7 @@ class MyProfile extends Component {
                   )}
                 </p>
                 {isEmpty(profile.age) ? null : (
-                  <span>I am {profile.age} years old</span>
+                  <span>{profile.age} years old</span>
                 )}
                 {isEmpty(profile.location) ? null : <p>{profile.location}</p>}
                 {isEmpty(profile.phoneNumber) ? null : <p>{profile.phoneNumber}</p>}

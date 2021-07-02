@@ -67,7 +67,7 @@ const TutorList = (props) => {
 
   return (
     <div>
-      <table class="table table-striped">
+      <table className="table table-striped">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -86,11 +86,11 @@ const TutorList = (props) => {
                   <td>{tutor.user.userName}</td>
                   <td>{tutor.user.email}</td>
                   <td>
-                    {tutor.profileState === "EMPTY"
+                    {tutor.profile == null
                       ? "No profile"
-                      : tutor.profileState === "BEGINNING"
+                      : tutor.profile.profileState === "BEGINNING"
                       ? "Waiting for request"
-                      : tutor.profileState}
+                      : tutor.profile.profileState}
                   </td>{" "}
                   <Link
                     className="btn btn-info mt-3"
@@ -99,7 +99,7 @@ const TutorList = (props) => {
                   >
                     View Profile
                   </Link>
-                  {(tutor.profileState === "PENDING" || tutor.profileState === "BLOCKED")&& (
+                  {(tutor.profile.profileState === "PENDING" || tutor.profile.profileState === "BLOCKED")&& (
                     <button
                       className="btn btn-success mt-3 ml-2"
                       type="button"
@@ -110,13 +110,13 @@ const TutorList = (props) => {
                       onClick={(e) => {
                         setActionType("approve");
                         setUserName(tutor.user.userName);
-                        setProfileId(tutor.profileId);
+                        setProfileId(tutor.profile.id);
                       }}
                     >
                       Approve
                     </button>
                   )}
-                  {(tutor.profileState === "APPROVED" || tutor.profileState === "PENDING") && (
+                  {(tutor.profile.profileState === "APPROVED" || tutor.profile.profileState === "PENDING") && (
                     <button
                       className="btn btn-danger mt-3 ml-2"
                       type="button"
@@ -126,7 +126,7 @@ const TutorList = (props) => {
                       onClick={(e) => {
                         setActionType("block");
                         setUserName(tutor.user.userName);
-                        setProfileId(tutor.profileId);
+                        setProfileId(tutor.profile.id);
                       }}
                       style={{ width: "90px" }}
                     >
@@ -140,29 +140,29 @@ const TutorList = (props) => {
       </table>
       {/* Modal Section */}
       <div
-        class="modal fade"
+        className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">
                 Confirmation?
               </h5>
               <button
                 type="button"
-                class="close"
+                className="close"
                 data-dismiss="modal"
                 aria-label="Close"
               >
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               Do you really want to {actionType} {" "} {userName}'s profile?
             </div>
             <div className="row">
@@ -178,18 +178,18 @@ const TutorList = (props) => {
               </div>
               <div className="col-md-5"></div>
             </div>
-            <div class="modal-footer">
+            <div className="modal-footer">
               <button
                 id="#closemodal"
                 type="button"
-                class="btn btn-secondary"
+                className="btn btn-secondary"
                 data-dismiss="modal"
               >
                 Close
               </button>
               <button
                 type="button"
-                class="btn btn-info"
+                className="btn btn-info"
                 onClick={(e) => actionType ==="approve" ? approveProfile(e) : blockProfile(e)}
               >
                 {actionType ==="approve" ? "Approve" : " Block"} {" "}profile
