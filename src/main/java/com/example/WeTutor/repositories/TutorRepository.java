@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TutorRepository extends MongoRepository<Tutor,Integer> {
     Tutor findTutorById(String tutorId);
+    Tutor findTutorByEmail(String email);
 }

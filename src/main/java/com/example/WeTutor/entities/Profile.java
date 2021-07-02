@@ -8,7 +8,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -34,16 +33,13 @@ public class Profile {
     private String workExperiences;
     private String languages;
     private String profilePic;
+    private int rating;
+    private int ratedBy;
 
     @Enumerated(EnumType.STRING)
     private ProfileState profileState;
 
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
-    )
-    @JoinColumn(name="user_id", referencedColumnName = "id")
-    @JsonBackReference
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "profile")
     private User tutor;
 
     public Profile(String age, String firstName,
@@ -66,6 +62,8 @@ public class Profile {
         this.profileState = ProfileState.BEGINNING;
         this.profilePic = profilePic;
         this.tutor = tutor;
+        this.rating = 0;
+        this.ratedBy = 0;
     }
 
 }

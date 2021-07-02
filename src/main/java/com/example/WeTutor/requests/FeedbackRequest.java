@@ -12,7 +12,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class FeedbackRequest {
-    private final String parent;
-    private final String tutor;
+    private final String tutorEmail;
+    private final String parentEmail;
     private final int rating;
 }

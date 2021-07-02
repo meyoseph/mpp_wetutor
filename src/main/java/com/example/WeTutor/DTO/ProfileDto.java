@@ -25,5 +25,7 @@ public class ProfileDto {
     private String profilePic;
     @Enumerated(EnumType.STRING)
     private ProfileState profileState;
+    private int rating;
+    private int ratedBy;
     private User tutor;
 }

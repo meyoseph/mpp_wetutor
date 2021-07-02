@@ -29,7 +29,7 @@ class Dashboard extends Component {
           <div>
             <p className="lead text-muted">
               Welcome{" "}
-              <Link to={`/profile/${profile.tutorId}`}>{userInfo.userName}</Link>
+              <Link to={`/profile/${profile.tutor.id}`}>{userInfo.userName}</Link>
             </p>
             <hr />
             <ToastProvider>

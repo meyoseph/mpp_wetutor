@@ -68,12 +68,12 @@ public class AdminService {
     public ResponseEntity<Object> getAllTutors() {
         List<User> users = userRepository.findAll();
         List<CustomTutorResponse> tutors = new ArrayList<>();
-        CustomTutorResponse customTutorResponse = new CustomTutorResponse();
+        CustomTutorResponse customTutorResponse;
         for(User u: users){
             if(u.getRoles().get(0).getRoleName().equals("tutor")){
+                customTutorResponse = new CustomTutorResponse();
                 customTutorResponse.setUser(u);
-                customTutorResponse.setProfileState(getProfileState(u));
-                customTutorResponse.setProfileId(getProfileId(u));
+                customTutorResponse.setProfile(getProfile(u));
                 tutors.add(customTutorResponse);
             }
         }
@@ -94,23 +94,12 @@ public class AdminService {
         return ResponseEntity.status(HttpStatus.OK).body(parents);
     }
 
-    public ProfileState getProfileState(User tutor){
+    public Profile getProfile(User tutor){
         Profile profile = profileRepository.findProfileByTutorId(tutor.getId());
-
-        if(profile == null){
-            return ProfileState.EMPTY;
-        }else{
-            return profile.getProfileState();
-        }
-    }
-
-    public String getProfileId(User tutor){
-        Profile profile = profileRepository.findProfileByTutorId(tutor.getId());
-
         if(profile == null){
             return null;
         }else{
-            return profile.getId();
+            return profile;
         }
     }
 }

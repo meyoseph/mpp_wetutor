@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 const Dashboard = (props) => {
   const { userInfo } = props.auth;
-  console.log("User info", userInfo && userInfo);
   let dashboardContent;
 
   dashboardContent =

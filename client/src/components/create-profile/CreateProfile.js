@@ -80,7 +80,6 @@ class CreateProfile extends Component {
       };
       await S3.uploadFile(file, config)
         .then((data) => {
-          console.log(data.location);
           this.setState({ profilePic: data.location });
         })
         .catch((err) => {
@@ -337,7 +336,7 @@ class CreateProfile extends Component {
                     type="file"
                     ref={this.fileInput}
                     accept="image/png, image/gif, image/jpeg"
-                    class="form-control-file"
+                    className="form-control-file"
                     id="exampleFormControlFile1"
                   />
                   <small className="form-text text-muted">

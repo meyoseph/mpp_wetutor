@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import isEmpty from "../../validation/is-empty";
-
+import Rating from "../common/Rating";
 class ProfileBody extends Component {
   render() {
     const { profile } = this.props;
@@ -38,7 +38,21 @@ class ProfileBody extends Component {
                 </div>
               </div>
               <div className="text-center">
-                <h1 className="display-4 text-center">{profile.firstName}{" "}{profile.lastName}</h1>
+                <h1 className="display-4 text-center">
+                  {profile.firstName} {profile.lastName}
+                </h1>
+                {profile.ratedBy > 0 ? (
+                  <span>
+                    <Rating value={profile.rating} type="flex" />
+                    <small style={{ color: "white" }}>
+                      Rated by {profile.ratedBy} people
+                    </small>
+                  </span>
+                ) : (
+                  <p>
+                    <small>Not rated yet</small>
+                  </p>
+                )}
                 <p className="lead text-center">
                   {profile.status}{" "}
                   {isEmpty(profile.gender) ? null : (
@@ -49,11 +63,21 @@ class ProfileBody extends Component {
                   <span>I am {profile.age} years old</span>
                 )}
                 {isEmpty(profile.location) ? null : <p>{profile.location}</p>}
-                {isEmpty(profile.phoneNumber) ? null : <p>{profile.phoneNumber}</p>}
-                <hr style={{backgroundColor:"white", width:'600px'}}/>
-                {isEmpty(profile.phoneNumber) ? null : <p className="lead text-center">{profile.educations}</p>}
-                {isEmpty(profile.phoneNumber) ? null : <p className="lead text-center">Major in {profile.majorSubject}</p>}
-                {isEmpty(profile.workExperiences) ? null : <p>{profile.workExperiences} of work experience.</p>}
+                {isEmpty(profile.phoneNumber) ? null : (
+                  <p>{profile.phoneNumber}</p>
+                )}
+                <hr style={{ backgroundColor: "white", width: "600px" }} />
+                {isEmpty(profile.phoneNumber) ? null : (
+                  <p className="lead text-center">{profile.educations}</p>
+                )}
+                {isEmpty(profile.phoneNumber) ? null : (
+                  <p className="lead text-center">
+                    Major in {profile.majorSubject}
+                  </p>
+                )}
+                {isEmpty(profile.workExperiences) ? null : (
+                  <p>{profile.workExperiences} of work experience.</p>
+                )}
               </div>
             </div>
           </div>

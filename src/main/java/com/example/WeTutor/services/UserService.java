@@ -1,7 +1,9 @@
 package com.example.WeTutor.services;
 
 import com.example.WeTutor.entities.*;
+import com.example.WeTutor.repositories.ParentRepository;
 import com.example.WeTutor.repositories.RoleRepository;
+import com.example.WeTutor.repositories.TutorRepository;
 import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.RegistrationRequest;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,9 @@ public class UserService implements UserDetailsService {
 
     private UserRepository repository;
     private RoleRepository roleRepository;
+    private TutorRepository tutorRepository;
+    private ParentRepository parentRepository;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -59,13 +64,13 @@ public class UserService implements UserDetailsService {
             Role role;
             // Code to be modified later
             if(request.getRole().equals("parent")){
-                role = new Parent();
-            }
-            else if(request.getRole().equals("admin")){
-                role = new Admin();
-            }
-            else{
-                role = new Tutor();
+                role = new Parent(request.getEmail());
+                Parent parent = new Parent(request.getEmail());
+                parentRepository.save(parent);
+            }else{
+                role = new Tutor(request.getEmail());
+                Tutor tutor = new Tutor(request.getEmail());
+                tutorRepository.save(tutor);
             }
             List<Role> roles = roleRepository.findAll();
             boolean roleExists = false;

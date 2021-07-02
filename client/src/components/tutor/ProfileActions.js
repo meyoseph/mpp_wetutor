@@ -71,45 +71,46 @@ const ProfileActions = (props) => {
           </button>
         )}
       </div>
+      {props.profile.profileState === "BEGINNING" && <p className="lead text-muted">You need to send approval request and get approved for your profile to be seen by parents.</p>}
       {/* Modal Section */}
       <div
-        class="modal fade"
+        className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">
                 Confirmation?
               </h5>
               <button
                 type="button"
-                class="close"
+                className="close"
                 data-dismiss="modal"
                 aria-label="Close"
               >
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               Do you really want to request for profile approval?
             </div>
-            <div class="modal-footer">
+            <div className="modal-footer">
               <button
                 id="#closemodal"
                 type="button"
-                class="btn btn-secondary"
+                className="btn btn-secondary"
                 data-dismiss="modal"
               >
                 Close
               </button>
               <button
                 type="button"
-                class="btn btn-info"
+                className="btn btn-info"
                 onClick={handleRequest}
               >
                 Request approval
