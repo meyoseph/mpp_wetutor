@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.1.0",
+  "version": "6.14.13",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
@@ -51,5 +51,16 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:9192"
+  "proxy": "http://localhost:9192",
+  "description": "To run this frontend application:",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git"
+  },
+  "keywords": [
+    "git"
+  ],
+  "author": "habiba",
+  "license": "ISC"
 }
