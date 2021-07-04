@@ -26,9 +26,9 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
-    @Autowired
+    @Mock
     private TutorRepository tutorRepository;
-    @Autowired
+    @Mock
     private ParentRepository parentRepository;
 
     @Captor

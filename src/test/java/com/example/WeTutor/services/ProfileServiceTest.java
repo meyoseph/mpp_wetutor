@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.mapping.TextScore;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 public class ProfileServiceTest {
@@ -173,6 +175,28 @@ public class ProfileServiceTest {
     void itShouldReturnProfileDoesntExist(){
         ResponseEntity<Object> responses = profileService.deleteProfile("123");
         assertEquals(400, responses.getStatusCodeValue());
+    }
+
+    @Test
+    void itShouldDeleteProfileIfProfileExist(){
+        Profile profile = new Profile(
+                "27",
+                "yoseph",
+                "birhanu",
+                "male",
+                "+251911072790",
+                "addis ababa",
+                "test",
+                "math",
+                "subjects",
+                "degree",
+                "test",
+                "languages",
+                "test",
+                new User());
+        when(profileRepository.findProfileById(profile.getId())).thenReturn(profile);
+        ResponseEntity<Object> responses = profileService.deleteProfile(profile.getId());
+        assertEquals(200, responses.getStatusCodeValue());
     }
 
     @Test
@@ -603,6 +627,28 @@ public class ProfileServiceTest {
     }
 
     @Test
+    void itShouldSendApprovalRequestSent(){
+        Profile profile = new Profile(
+                "27",
+                "yoseph",
+                "birhanu",
+                "male",
+                "+251911072790",
+                "addis ababa",
+                "test",
+                "math",
+                "subjects",
+                "degree",
+                "test",
+                "languages",
+                "test",
+                new User());
+        when(profileRepository.findProfileById(profile.getId())).thenReturn(profile);
+        ResponseEntity<Object> responseEntity = profileService.request(profile.getId());
+        assertEquals(200, responseEntity.getStatusCodeValue());
+    }
+
+    @Test
     void itShouldReturnWhenGetProfilesISCalled(){
         ResponseEntity<Object> responseEntity = profileService.getProfiles();
         assertEquals(200, responseEntity.getStatusCodeValue());
@@ -658,7 +704,7 @@ public class ProfileServiceTest {
     }
 
     @Test
-    void itShouldReturnProfile(){
+    void itShouldFailToReturnProfile(){
         Role role = new Tutor();
         User user = new User("test1", "test2", "test@gmail.com", role);
         Profile profile1 = new Profile(
@@ -682,5 +728,106 @@ public class ProfileServiceTest {
         ResponseEntity<Object> responseEntity = profileService.getProfileById(tutorId);
         assertEquals(400, responseEntity.getStatusCodeValue());
     }
+
+    @Test
+    void itShouldReturnProfile(){
+        Role role = new Tutor();
+        User user = new User("test1", "test2", "test@gmail.com", role);
+        Profile profile1 = new Profile(
+                "27",
+                "yoseph",
+                "birhanu",
+                "male",
+                "+251911072790",
+                "addis ababa",
+                "test",
+                "math",
+                "java, ruby",
+                "degree",
+                "test",
+                "test",
+                "test",
+                new User());
+        when(userRepository.findById(user.getId())).thenReturn(user);
+        when(profileRepository.findProfileByTutorId(user.getId())).thenReturn(profile1);
+        ResponseEntity<Object> responseEntity = profileService.getProfileById(user.getId());
+        assertEquals(200, responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void itShouldReturnBadRequestWhenProfileDoesExist(){
+        Role role = new Tutor();
+        User user = new User("test1", "test2", "test@gmail.com", role);
+        given(userRepository.save(user)).willReturn(user);
+        User user2 = new User("test1", "test2", "test@gmail.com", role);
+        given(userRepository.save(user)).willReturn(user2);
+        Profile profile1 = new Profile(
+                "27",
+                "yoseph",
+                "birhanu",
+                "male",
+                "+251911072790",
+                "addis ababa",
+                "test",
+                "math",
+                "java, ruby",
+                "degree",
+                "test",
+                "test",
+                "test",
+                user);
+        Profile profile2 = new Profile(
+                "30",
+                "meskerem",
+                "birhanu",
+                "male",
+                "+251911072790",
+                "addis ababa",
+                "test",
+                "math",
+                "java, ruby",
+                "degree",
+                "test",
+                "test",
+                "test",
+                user2);
+        //List<Profile> profiles = new ArrayList<>();
+        //profiles.add(profile1);
+        //profiles.add(profile2);
+        //when(profileRepository.findAll()).thenReturn(profiles);
+        user.setId("123");
+        user2.setId("456");
+        profile1.setTutor(user);
+        profile2.setTutor(user2);
+        ResponseEntity<Object> responseEntity = profileService.deleteProfileByTutorId(user.getId());
+        assertEquals(400, responseEntity.getStatusCodeValue());
+    }
+
+//    @Test
+//    void itShouldGetTheProfileOfLoggedInUser(){
+//        Role role = new Tutor();
+//        User user = new User("test1", "test2", "test@gmail.com", role);
+//        user.setId("123");
+//        when(profileService.getLoggedInUserId()).thenReturn(user.getId());
+//        when(userRepository.findById(user.getId())).thenReturn(user);
+//        Profile profile1 = new Profile(
+//                "27",
+//                "yoseph",
+//                "birhanu",
+//                "male",
+//                "+251911072790",
+//                "addis ababa",
+//                "test",
+//                "math",
+//                "java, ruby",
+//                "degree",
+//                "test",
+//                "test",
+//                "test",
+//                user);
+//        when(profileRepository.findProfileByTutorId(user.getId())).thenReturn(profile1);
+//        ResponseEntity<Object> responseEntity = profileService.getProfile();
+//        System.out.println(responseEntity);
+//    }
 
 }

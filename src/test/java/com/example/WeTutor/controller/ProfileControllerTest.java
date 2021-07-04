@@ -39,7 +39,7 @@ public class ProfileControllerTest {
 
     @Test
     void itShouldHitGetProfilesEndPointSuccessfully() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get("/api/profile/"));
+        ResultActions resultActions = mockMvc.perform(get("/api/profile/tutors"));
         resultActions.andExpect(status().isOk());
     }
 

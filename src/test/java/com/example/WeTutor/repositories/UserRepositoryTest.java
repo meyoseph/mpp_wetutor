@@ -28,30 +28,4 @@ public class UserRepositoryTest {
         userName = "test";
     }
 
-    @Test
-    void itShouldFindUserByEmail(){
-        String email2 = "test123@gmail.com";
-        User user = new User(userName, password, email2, role);
-        userRepository.save(user);
-        User user2 = userRepository.findByEmail(email2);
-        assertThat(user2).isEqualTo(user);
-    }
-
-    @Test
-    void itShouldFindUserByUserName(){
-        String email2 = "test2@gmail.com";
-        String userName2 = "jos";
-        User user = new User(userName2, password, email2, role);
-        userRepository.save(user);
-        User user2 = userRepository.findByUserName(userName2);
-        assertThat(user2).isEqualTo(user);
-    }
-
-    @Test
-    void itShouldFindById(){
-        User user = new User(userName, password, email, role);
-        userRepository.save(user);
-        User user2 = userRepository.findById(user.getId());
-        assertThat(user2).isEqualTo(user);
-    }
 }
