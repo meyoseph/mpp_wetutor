@@ -32,6 +32,12 @@ public class ProfileControllerTest {
     private ProfileService profileService;
 
     @Test
+    void itShouldHitGetALLProfilesEndPointSuccessfully() throws Exception {
+        ResultActions resultActions = mockMvc.perform(get("/api/profile/all"));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
     void itShouldHitGetProfilesEndPointSuccessfully() throws Exception {
         ResultActions resultActions = mockMvc.perform(get("/api/profile/"));
         resultActions.andExpect(status().isOk());
