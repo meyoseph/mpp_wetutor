@@ -1,7 +1,9 @@
 package com.example.WeTutor.services;
 
 import com.example.WeTutor.entities.User;
+import com.example.WeTutor.repositories.ParentRepository;
 import com.example.WeTutor.repositories.RoleRepository;
+import com.example.WeTutor.repositories.TutorRepository;
 import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.RegistrationRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +26,11 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private TutorRepository tutorRepository;
+    @Autowired
+    private ParentRepository parentRepository;
+
     @Captor
     private ArgumentCaptor<User> userArgumentCaptor;
     private RegistrationRequest request;
@@ -36,7 +43,7 @@ public class UserServiceTest {
                 "password",
                 "role");
         MockitoAnnotations.initMocks(this);
-        userService = new UserService(userRepository, roleRepository, new BCryptPasswordEncoder());
+        userService = new UserService(userRepository, roleRepository, tutorRepository, parentRepository, new BCryptPasswordEncoder());
     }
 
     @Test
