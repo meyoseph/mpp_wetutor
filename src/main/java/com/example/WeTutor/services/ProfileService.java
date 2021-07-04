@@ -341,43 +341,43 @@ public class ProfileService {
         return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
 
-	public List<ResponseEntity<Object>> getProfileByTutorUserName(String tutorUserName) {
-		List<JSONObject> response = (List<JSONObject>) new JSONObject();
-		List<Profile> profile = profileRepositoryElasticSearch.findAllByUserName(tutorUserName);
-		if (profile.size() == 0) {
-			((HashMap) response).put("profile","no profile by this username");
-			return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	public ResponseEntity<Object> getProfileByTutorUserName(String tutorUserName) {
+		JSONObject response = new JSONObject();
+		Profile profile = profileRepositoryElasticSearch.findAllByUserName(tutorUserName);
+		if (profile == null) {
+			response.put("profile","no profile by this username");
+			return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
-		return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.OK).body(profile);
+		return  ResponseEntity.status(HttpStatus.OK).body(profile);
 	}
 
-	public List<ResponseEntity<Object>> getProfileByTutorLocation(String tutorLocation) {
-		List<JSONObject> response = (List<JSONObject>) new JSONObject();
-		List<Profile> profile = profileRepositoryElasticSearch.getProfileByTutorLocation(tutorLocation);
-		if (profile.size() == 0) {
-			((HashMap) response).put("profile","no profile by this username");
-			return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	public ResponseEntity<Object> getProfileByTutorLocation(String tutorLocation) {
+		JSONObject response =  new JSONObject();
+		Profile profile = profileRepositoryElasticSearch.getProfileByTutorLocation(tutorLocation);
+		if (profile == null) {
+			 response.put("profile","no profile by this username");
+			return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
-		return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.OK).body(profile);
+		return  ResponseEntity.status(HttpStatus.OK).body(profile);
 	}
 
-	public List<ResponseEntity<Object>> getProfileByTutorSubjects(String tutorSubjects) {
-		List<JSONObject> response = (List<JSONObject>) new JSONObject();
-		List<Profile> profile = profileRepositoryElasticSearch.getProfileByTutorSubjects(tutorSubjects);
-		if (profile.size() == 0) {
-			((HashMap) response).put("profile","no profile by this username");
-			return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	public ResponseEntity<Object> getProfileByTutorSubjects(String tutorSubjects) {
+		JSONObject response =  new JSONObject();
+		Profile profile = profileRepositoryElasticSearch.getProfileByTutorSubjects(tutorSubjects);
+		if (profile == null) {
+			response.put("profile","no profile by this username");
+			return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
-		return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.OK).body(profile);
+		return  ResponseEntity.status(HttpStatus.OK).body(profile);
 	}
 
-	public List<ResponseEntity<Object>> getProfileByTutorLanguages(String tutorLanguages) {
-		List<JSONObject> response = (List<JSONObject>) new JSONObject();
-		List<Profile> profile = profileRepositoryElasticSearch.getProfileByTutorLanguages(tutorLanguages);
-		if (profile.size() == 0) {
-			((HashMap) response).put("profile","no profile by this username");
-			return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	public ResponseEntity<Object> getProfileByTutorLanguages(String tutorLanguages) {
+		JSONObject response =  new JSONObject();
+		Profile profile = profileRepositoryElasticSearch.getProfileByTutorLanguages(tutorLanguages);
+		if (profile == null) {
+			 response.put("profile","no profile by this username");
+			return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
-		return (List<ResponseEntity<Object>>) ResponseEntity.status(HttpStatus.OK).body(profile);
+		return  ResponseEntity.status(HttpStatus.OK).body(profile);
 	}
 }

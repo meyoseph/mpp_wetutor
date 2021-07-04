@@ -10,12 +10,12 @@ import com.example.WeTutor.entities.Profile;
 @Repository
 public interface ProfileRepositoryElasticSearch extends ElasticsearchRepository<Profile, String> {
 
-	List<Profile> findAllByUserName(String tutorUserName);
+	Profile findAllByUserName(String tutorUserName);
 
-	List<Profile> getProfileByTutorLocation(String tutorLocation);
+	Profile getProfileByTutorLocation(String tutorLocation);
 
-	List<Profile> getProfileByTutorSubjects(String tutorSubjects);
+	Profile getProfileByTutorSubjects(String tutorSubjects);
 
-	List<Profile> getProfileByTutorLanguages(String tutorLanguages);
+	Profile getProfileByTutorLanguages(String tutorLanguages);
 
 }

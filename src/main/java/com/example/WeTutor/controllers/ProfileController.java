@@ -43,26 +43,26 @@ public class ProfileController {
     }
 
     @GetMapping("/{tutorUserName}")
-    public List<ResponseEntity<Object>> getProfileByTutorUserName(@PathVariable("tutorUserName") String tutorUserName) throws Exception {
-    	List<ResponseEntity<Object>> response = profileService.getProfileByTutorUserName(tutorUserName);
+    public ResponseEntity<Object> getProfileByTutorUserName(@PathVariable("tutorUserName") String tutorUserName) throws Exception {
+    	ResponseEntity<Object> response = profileService.getProfileByTutorUserName(tutorUserName);
         return response;
     }
     
     @GetMapping("/{tutorLocation}")
-    public List<ResponseEntity<Object>> getProfileByTutorLocation(@PathVariable("tutorLocation") String tutorLocation) throws Exception{
-    	List<ResponseEntity<Object>> response = profileService.getProfileByTutorLocation(tutorLocation);
+    public ResponseEntity<Object> getProfileByTutorLocation(@PathVariable("tutorLocation") String tutorLocation) throws Exception{
+    	ResponseEntity<Object> response = profileService.getProfileByTutorLocation(tutorLocation);
     	return response;
     }
     
     @GetMapping("/{tutorSubjects}")
-    public List<ResponseEntity<Object>> getProfileByTutorSubjects(@PathVariable("tutorSubjects") String tutorSubjects) throws Exception{
-    	List<ResponseEntity<Object>> response = profileService.getProfileByTutorSubjects(tutorSubjects);
+    public ResponseEntity<Object> getProfileByTutorSubjects(@PathVariable("tutorSubjects") String tutorSubjects) throws Exception{
+    	ResponseEntity<Object> response = profileService.getProfileByTutorSubjects(tutorSubjects);
     	return response;
     } 
     
     @GetMapping("/{tutorLanguages}")
-    public List<ResponseEntity<Object>> getProfileByTutorLanguages(@PathVariable("tutorLanguages") String tutorLanguages) throws Exception{
-    	List<ResponseEntity<Object>> response = profileService.getProfileByTutorLanguages(tutorLanguages);
+    public ResponseEntity<Object> getProfileByTutorLanguages(@PathVariable("tutorLanguages") String tutorLanguages) throws Exception{
+    	ResponseEntity<Object> response = profileService.getProfileByTutorLanguages(tutorLanguages);
     	return response;
     } 
     // Creates profile
