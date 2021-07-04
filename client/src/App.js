@@ -8,7 +8,7 @@ import {
   getUserInfo,
   clearFullUserInfo,
   clearAllParents,
-  clearAllTutors
+  clearAllTutors,
 } from "./actions/authActions";
 import { clearCurrentProfile } from "./actions/profileActions";
 
@@ -16,13 +16,13 @@ import { Provider } from "react-redux";
 import AdminProtected from "./components/common/AdminProtected";
 import ParentProtected from "./components/common/ParentProtected";
 import TutorProtected from "./components/common/TutorProtected";
+import PrivateRoute from "./components/common/PrivateRoute";
 import store from "./store";
 
 import NotFound from "./components/not-found/NotFound";
 import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
 import CreateProfile from "./components/create-profile/CreateProfile";
-import Profiles from "./components/profiles/Profiles";
 import Profile from "./components/profile/Profile";
 import EditProfile from "./components/edit-profile/EditProfile";
 import SubscriptionForm from "./components/parent/SubscriptionForm";
@@ -33,8 +33,8 @@ import AdminDashboard from "./components/admin/Dashboard";
 import TutorDashboard from "./components/tutor/Dashboard";
 import ParentDashboard from "./components/parent/Dashboard";
 import { ToastProvider } from "react-toast-notifications";
+import LandingProfiles from "./components/landing-profiles/LandingProfiles";
 import "./App.css";
-import test from "./components/test";
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -73,11 +73,10 @@ class App extends Component {
           <div className="App">
             <Navbar />
             <Route exact path="/" component={Landing} />
-            <Route exact path="/test" component={test} />
             <div className="container">
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/profiles" component={Profiles} />
+              <Route exact path="/tutors" component={LandingProfiles} />
               {/* <Route exact path ="/profile/:handle" component={ Profile }/> */}
               <Switch>
                 <AdminProtected
@@ -124,20 +123,16 @@ class App extends Component {
                   />
                 </Switch>
               </ToastProvider>
-              <Switch>
-                <ParentProtected
-                  exact
-                  path="/profile/:tutorId"
-                  component={Profile}
-                />
-              </Switch>
-              {/* <Switch>
-                <PrivateRoute exact path ="/post/:id" component={ Post }/>
-              </Switch> */}
-              {/* <Switch>
-                <PrivateRoute exact path ="/feed" component={ Posts }/>
-              </Switch> */}
-              <Route exact path ="/not-found" component={ NotFound }/>
+              <ToastProvider>
+                <Switch>
+                  <PrivateRoute
+                    exact
+                    path="/profile/:tutorId"
+                    component={Profile}
+                  />
+                </Switch>
+              </ToastProvider>
+              <Route exact path="/not-found" component={NotFound} />
             </div>
             <Footer />
           </div>

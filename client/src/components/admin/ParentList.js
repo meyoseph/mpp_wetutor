@@ -2,7 +2,7 @@ import React from "react";
 
 const ParentList = (props) => {
   return (
-    <table class="table table-striped">
+    <table className="table table-striped">
       <thead>
         <tr>
           <th scope="col">#</th>

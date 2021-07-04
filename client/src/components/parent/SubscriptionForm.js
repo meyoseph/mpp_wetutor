@@ -24,6 +24,7 @@ class SubscriptionForm extends Component {
       expirationMonth: 0,
       expirationYear: 0,
       cvc: "",
+      loadging: false,
       errors: {},
     };
 
@@ -43,6 +44,8 @@ class SubscriptionForm extends Component {
 
   async onSubmit(e) {
     e.preventDefault();
+
+    this.setState({ loading: true });
 
     const subscriptionData = {
       cardNumber: this.state.cardNumber,
@@ -66,10 +69,8 @@ class SubscriptionForm extends Component {
             expirationYear: 0,
             cvc: "",
           });
-          setTimeout(() => {
-            this.props.getUserInfo();
-            this.props.history.push("/parent-dashboard");
-          }, 2000);
+          this.props.getUserInfo();
+          this.props.history.push("/parent-dashboard");
         }
       })
       .catch((err) =>
@@ -78,6 +79,8 @@ class SubscriptionForm extends Component {
           payload: err.response.data,
         })
       );
+
+      this.setState({ loading: false });
   }
 
   render() {
@@ -86,12 +89,14 @@ class SubscriptionForm extends Component {
     return (
       <div
         className="create-profile shadow-lg mb-5 mt-5 bg-white rounded"
-        style={{ width: "1000px", height: "600px" }}
+        style={{ width: "1000px", height: "630px" }}
       >
         <div className="container">
           <div className="row">
             <div className="col-md-12 mt-5">
-              <Link to="/parent-dashboard" className="btn btn-light">Go back</Link>
+              <Link to="/parent-dashboard" className="btn btn-light">
+                Go back
+              </Link>
             </div>
             <div className="col-md-12 m-auto">
               <h1 className="display-4 text-center">Subscribe</h1>
@@ -153,7 +158,19 @@ class SubscriptionForm extends Component {
                   />
                 </div>
               </div>
-
+              <div className="row">
+                <div className="col-md-5"></div>
+                <div className="col-md-2">
+                  {this.state.loading && (
+                    <div className="spinner-border text-info " role="status">
+                      <span className="sr-only justify-content-center">
+                        Loading...
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-5"></div>
+              </div>
               <input
                 type="submit"
                 value="Submit"

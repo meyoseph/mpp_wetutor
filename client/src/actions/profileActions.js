@@ -6,7 +6,8 @@ import {
   GET_PROFILE,
   CLEAR_CURRENT_PROFILE,
   SET_CURRENT_USER,
-  GET_PROFILES
+  GET_PROFILES,
+  GET_CUSTOM_PROFILES
 } from "./types";
 
 // Get Current Profile
@@ -95,6 +96,25 @@ export const getProfiles = () => (dispatch) => {
     .then((res) =>
       dispatch({
         type: GET_PROFILES,
+        payload: res.data,
+      })
+    )
+    .catch((err) =>
+      dispatch({
+        type: GET_PROFILES,
+        payload: null,
+      })
+    );
+};
+
+// Get all profiles
+export const getTutorsProfile = () => (dispatch) => {
+  dispatch(setProfileLoading());
+  axios
+    .get("/api/profile/tutors")
+    .then((res) =>
+      dispatch({
+        type: GET_CUSTOM_PROFILES,
         payload: res.data,
       })
     )

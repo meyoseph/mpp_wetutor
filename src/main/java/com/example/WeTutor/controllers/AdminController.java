@@ -1,6 +1,5 @@
 package com.example.WeTutor.controllers;
 
-import com.example.WeTutor.requests.ProfileRequest;
 import com.example.WeTutor.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

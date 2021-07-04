@@ -33,12 +33,18 @@ public class ProfileService {
         JSONObject responseObject = new JSONObject();
 
         List<Profile> profiles = profileRepository.findAll();
-        List<ProfileDto> profileDto = mapList(profiles, ProfileDto.class);
 
+        List<Profile> filteredProfiles = new ArrayList<>();
+        if(profiles != null){
+            for(Profile p: profiles){
+                if(p.getProfileState().equals(ProfileState.APPROVED)){
+                    filteredProfiles.add(p);
+                }
+            }
+        }
+        List<ProfileDto> profileDto = mapList(filteredProfiles, ProfileDto.class);
         if(profiles != null && profileDto != null){
-            responseObject.put("success",true);
-            responseObject.put("profiles", profileDto);
-            return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+            return ResponseEntity.status(HttpStatus.OK).body(profileDto);
         }else{
             responseObject.put("error",true);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseObject);
@@ -57,11 +63,11 @@ public class ProfileService {
         JSONObject responseObject = new JSONObject();
 
         List<Profile> profiles = profileRepository.findAll();
-        List<Profile> filteredProfiles = new ArrayList<Profile>();
+        List<Profile> filteredProfiles = new ArrayList<>();
 
         if(profiles != null){
             for(Profile p: profiles){
-                if(p.getProfileState().equals("APPROVED")){
+                if(p.getProfileState().equals(ProfileState.APPROVED)){
                     filteredProfiles.add(p);
                 }
             }

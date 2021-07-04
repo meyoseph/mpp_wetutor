@@ -405,7 +405,7 @@ class EditProfile extends Component {
                     type="file"
                     ref={this.fileInput}
                     accept="image/png, image/gif, image/jpeg"
-                    class="form-control-file"
+                    className="form-control-file"
                     id="exampleFormControlFile1"
                   />
                   <small className="form-text text-muted">
