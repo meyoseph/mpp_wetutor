@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -68,6 +68,18 @@ public class UserControllerTest {
         ResultActions resultActions = mockMvc.perform(post("/api/registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectToJson(registrationRequest))));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    void itShouldHiCurrentUserEndPoint() throws Exception{
+        ResultActions resultActions = mockMvc.perform(get("/api/current"));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    void itShouldWelcomeEndPoint() throws Exception{
+        ResultActions resultActions = mockMvc.perform(get("/api/"));
         resultActions.andExpect(status().isOk());
     }
 
