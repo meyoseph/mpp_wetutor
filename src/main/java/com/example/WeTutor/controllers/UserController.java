@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
+    @GetMapping("/test")
     public String welcome() {
         return "Welcome to WeTutor Web Application !!";
     }

@@ -7,7 +7,7 @@ import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import Select from "react-select";
 import SelectListGroup from "../common/SelectListGroup";
 import { createProfile } from "../../actions/profileActions";
-import S3 from "react-s3";
+import S3 from "react-aws-s3";
 
 class CreateProfile extends Component {
   constructor(props) {
@@ -67,6 +67,7 @@ class CreateProfile extends Component {
   async onSubmit(e) {
     this.setState({ loading: true });
     e.preventDefault();
+    let fileName = 'profile'+this.props.auth.userInfo.id;
 
     // Make sure profile picture is uploaded and image source is loaded first
     // Allow the tutor not to add his or her profile picture
@@ -78,7 +79,8 @@ class CreateProfile extends Component {
         accessKeyId: process.env.REACT_APP_S3_ACCESS_ID,
         secretAccessKey: process.env.REACT_APP_S3_ACCESS_KEY,
       };
-      await S3.uploadFile(file, config)
+      const ReactS3Client = new S3(config);
+      await ReactS3Client.uploadFile(file, fileName)
         .then((data) => {
           this.setState({ profilePic: data.location });
         })
