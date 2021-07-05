@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,9 @@ public class UserService implements UserDetailsService {
         }
         if(!validateInputs(request.getEmail())){
             errorObject.put("email", "Email is required");
+        }
+        if(validateEmail(request.getEmail()) != true){
+            errorObject.put("email", "Email is not valid!");
         }
         if(!validateInputs(request.getPassword())){
             errorObject.put("password", "Password is required");
@@ -106,4 +111,10 @@ public class UserService implements UserDetailsService {
         } else return true;
     }
 
+    public Boolean validateEmail(String string){
+        Pattern pattern = Pattern.compile("^(.+)@(.+)$");
+        Matcher matcher = pattern.matcher(string);
+
+        return matcher.matches();
+    }
 }
