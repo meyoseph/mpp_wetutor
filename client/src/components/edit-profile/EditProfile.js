@@ -8,7 +8,7 @@ import SelectListGroup from "../common/SelectListGroup";
 import Select from "react-select";
 import { editProfile, getCurrentProfile } from "../../actions/profileActions";
 import isEmpty from "../../validation/is-empty";
-import S3 from "react-s3";
+import S3 from "react-aws-s3";
 
 class EditProfile extends Component {
   constructor(props) {
@@ -132,7 +132,7 @@ class EditProfile extends Component {
   async onSubmit(e) {
     this.setState({ loading: true });
     e.preventDefault();
-
+    let fileName = 'profile'+this.props.auth.userInfo.id;
         // Make sure profile picture is uploaded and image source is loaded first
     // Allow the tutor not to add his or her profile picture
     if (this.fileInput.current.files.length > 0) {
@@ -143,7 +143,9 @@ class EditProfile extends Component {
         accessKeyId: process.env.REACT_APP_S3_ACCESS_ID,
         secretAccessKey: process.env.REACT_APP_S3_ACCESS_KEY,
       };
-      await S3.uploadFile(file, config)
+      const ReactS3Client = new S3(config);
+
+      await ReactS3Client.uploadFile(file, fileName)
         .then((data) => {
           console.log(data.location);
           this.setState({ profilePic: data.location });
