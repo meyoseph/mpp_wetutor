@@ -7,6 +7,7 @@ import com.example.WeTutor.requests.RegistrationRequest;
 import com.example.WeTutor.services.ProfileService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -58,6 +59,7 @@ public class ProfileControllerTest {
         resultActions.andExpect(status().isOk());
     }
 
+    @Disabled
     @Test
     void itShouldHitCreateProfileEndPointSuccessfully() throws Exception {
         String[] subjects = new String[]{"ruby", "java"};
@@ -84,6 +86,7 @@ public class ProfileControllerTest {
         resultActions.andExpect(status().isOk());
     }
 
+    @Disabled
     @Test
     void itShouldHitUpdateProfileEndPointSuccessfully() throws Exception {
         String[] subjects = new String[]{"ruby", "java"};

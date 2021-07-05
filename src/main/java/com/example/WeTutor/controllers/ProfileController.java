@@ -43,29 +43,7 @@ public class ProfileController {
         return response;
     }
 
-    @GetMapping("/{tutorUserName}")
-    public ResponseEntity<Object> getProfileByTutorUserName(@PathVariable("tutorUserName") String tutorUserName) throws Exception {
-    	ResponseEntity<Object> response = profileService.getProfileByTutorUserName(tutorUserName);
-        return response;
-    }
-    
-    @GetMapping("/{tutorLocation}")
-    public ResponseEntity<Object> getProfileByTutorLocation(@PathVariable("tutorLocation") String tutorLocation) throws Exception{
-    	ResponseEntity<Object> response = profileService.getProfileByTutorLocation(tutorLocation);
-    	return response;
-    }
-    
-    @GetMapping("/{tutorSubjects}")
-    public ResponseEntity<Object> getProfileByTutorSubjects(@PathVariable("tutorSubjects") String tutorSubjects) throws Exception{
-    	ResponseEntity<Object> response = profileService.getProfileByTutorSubjects(tutorSubjects);
-    	return response;
-    } 
-    
-    @GetMapping("/{tutorLanguages}")
-    public ResponseEntity<Object> getProfileByTutorLanguages(@PathVariable("tutorLanguages") String tutorLanguages) throws Exception{
-    	ResponseEntity<Object> response = profileService.getProfileByTutorLanguages(tutorLanguages);
-    	return response;
-    } 
+
     // Creates profile
     @PostMapping("/create-profile")
     public ResponseEntity<Object> createProfile(@RequestBody ProfileRequest profileRequest) throws Exception {

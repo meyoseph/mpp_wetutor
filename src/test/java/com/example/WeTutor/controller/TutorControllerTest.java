@@ -8,6 +8,7 @@ import com.example.WeTutor.services.TutorService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class TutorControllerTest {
         resultActions.andExpect(status().isOk());
     }
 
+    @Disabled
     @Test
     void itShouldHitRateTutorEndPointSuccessfully() throws Exception {
         FeedbackRequest feedbackRequest = new FeedbackRequest(

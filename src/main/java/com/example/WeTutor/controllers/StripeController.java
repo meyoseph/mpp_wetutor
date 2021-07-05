@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path="/api")
 public class StripeController {
 
-    @Value("${stripe.key}")
-    private String stripePublicKey;
+    //@Value("${stripe.key}")
+    private String stripePublicKey = "sk_test_51J6micBIfwXMPgplD3hYqI20pjOIei4KDTnBGP4pe5oI9eVqTM0oZgaiuBeo3dgfSIJNt2pGStkGhOgtw6sVFCRf00f4bV7I6T";
 
     @Autowired
     private StripeService stripeService;

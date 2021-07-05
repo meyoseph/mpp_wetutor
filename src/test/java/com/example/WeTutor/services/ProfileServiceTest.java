@@ -6,27 +6,16 @@ import com.example.WeTutor.entities.Role;
 import com.example.WeTutor.entities.Tutor;
 import com.example.WeTutor.entities.User;
 import com.example.WeTutor.repositories.ProfileRepository;
-import com.example.WeTutor.repositories.ProfileRepositoryElasticSearch;
 import com.example.WeTutor.repositories.TutorRepository;
 import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.ProfileRequest;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.TextScore;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +24,9 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 public class ProfileServiceTest {
-    @Mock
-    private ProfileRepositoryElasticSearch profileRepositoryElasticSearch;
     @Mock
     private ProfileRepository profileRepository;
     @Mock
@@ -55,7 +41,7 @@ public class ProfileServiceTest {
     @BeforeEach
     void setUp(){
         MockitoAnnotations.initMocks(this);
-        profileService = new ProfileService(profileRepositoryElasticSearch, profileRepository, tutorRepository, userRepository, modelMapper);
+        profileService = new ProfileService(profileRepository, tutorRepository, userRepository, modelMapper);
     }
 
     @Test
