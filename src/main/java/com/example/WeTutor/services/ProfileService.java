@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -273,6 +275,8 @@ public class ProfileService {
         if(!validateInputs(profileRequest.getPhoneNumber())){
             responseObject.put("phone_number", "Phone number is required");
         }
+        if(validatePhoneNumber(profileRequest.getPhoneNumber()) != true)
+            responseObject.put("phone_number", "Phone number is not valid!");
         if(!validateInputs(profileRequest.getLocation())){
             responseObject.put("location", "Location is required");
         }
@@ -339,5 +343,12 @@ public class ProfileService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         return ResponseEntity.status(HttpStatus.OK).body(profile);
+    }
+
+    public Boolean validatePhoneNumber(String string){
+        Pattern pattern = Pattern.compile("^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$");
+        Matcher matcher = pattern.matcher(string);
+
+        return matcher.matches();
     }
 }
