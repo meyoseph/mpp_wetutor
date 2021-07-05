@@ -1,0 +1,22 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Heroku Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Git deploy to Heroku
+      uses: onekiloparsec/heroku-node-deploy-subfolder@v1.1.0
+      with:
+        api_key: 0cb42428-ad24-4e3a-9b35-b6ef0bda8abf
+        email: atbedaso@gmail.com
+        app_name: we-tutor-app
