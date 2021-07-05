@@ -18,13 +18,17 @@ Project is created with:
 To run the frontend and the backend separately
 
 ## 1 ) Using docker
+```
 $ cd mpp_wetutor
 $ docker-compose up
 Then the backend will be running on your machine at port 9192 or you can test it on http://localhost:9192
+```
 
 ## Backend you need to install intelliJ
+```
 $ cd ../mpp_wetutor/server
 $ Open and run with intelliJ
+```
 
 ## Frontend 
 ```
