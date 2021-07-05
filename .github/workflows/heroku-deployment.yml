@@ -5,7 +5,7 @@ name: Heroku Deployment
 
 on:
   push:
-    branches: [ main ]
+    branches: [ abdi-current ]
 
 jobs:
   build:
