@@ -108,7 +108,7 @@ class CreateProfile extends Component {
       profilePic: this.state.profilePic,
       tutorId: this.props.auth.userInfo.id,
     };
-    this.props.createProfile(profileData, this.props.history);
+    await this.props.createProfile(profileData, this.props.history);
     this.setState({ loading: false });
   }
 

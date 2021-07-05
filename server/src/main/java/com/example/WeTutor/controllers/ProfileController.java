@@ -3,8 +3,6 @@ package com.example.WeTutor.controllers;
 import com.example.WeTutor.requests.ProfileRequest;
 import com.example.WeTutor.services.ProfileService;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,30 +40,31 @@ public class ProfileController {
         System.out.println("Profile response"+response);
         return response;
     }
-
-    @GetMapping("/{tutorUserName}")
-    public ResponseEntity<Object> getProfileByTutorUserName(@PathVariable("tutorUserName") String tutorUserName) throws Exception {
-    	ResponseEntity<Object> response = profileService.getProfileByTutorUserName(tutorUserName);
-        return response;
-    }
     
-    @GetMapping("/{tutorLocation}")
+    @GetMapping("/location/{tutorLocation}")
     public ResponseEntity<Object> getProfileByTutorLocation(@PathVariable("tutorLocation") String tutorLocation) throws Exception{
     	ResponseEntity<Object> response = profileService.getProfileByTutorLocation(tutorLocation);
     	return response;
     }
     
-    @GetMapping("/{tutorSubjects}")
-    public ResponseEntity<Object> getProfileByTutorSubjects(@PathVariable("tutorSubjects") String tutorSubjects) throws Exception{
-    	ResponseEntity<Object> response = profileService.getProfileByTutorSubjects(tutorSubjects);
+    @GetMapping("/major-subject/{tutorMajorSubject}")
+    public ResponseEntity<Object> getProfileByTutorMajor(@PathVariable("tutorMajorSubject") String tutorMajorSubject) throws Exception{
+    	ResponseEntity<Object> response = profileService.getProfileByTutorMajorSubject(tutorMajorSubject);
     	return response;
     } 
     
-    @GetMapping("/{tutorLanguages}")
-    public ResponseEntity<Object> getProfileByTutorLanguages(@PathVariable("tutorLanguages") String tutorLanguages) throws Exception{
-    	ResponseEntity<Object> response = profileService.getProfileByTutorLanguages(tutorLanguages);
+    @GetMapping("/rating/{tutorRating}")
+    public ResponseEntity<Object> getProfileByTutorRating(@PathVariable("tutorRating") int tutorRating) throws Exception{
+    	ResponseEntity<Object> response = profileService.getProfileByTutorRating(tutorRating);
     	return response;
-    } 
+    }
+
+    @GetMapping("/gender/{tutorGener}")
+    public ResponseEntity<Object> getProfileByTutorGender(@PathVariable("tutorGener") String tutorGener) throws Exception{
+        ResponseEntity<Object> response = profileService.getProfileByTutorGender(tutorGener);
+        return response;
+    }
+
     // Creates profile
     @PostMapping("/create-profile")
     public ResponseEntity<Object> createProfile(@RequestBody ProfileRequest profileRequest) {

@@ -3,14 +3,12 @@ package com.example.WeTutor.services;
 import com.example.WeTutor.DTO.ProfileDto;
 import com.example.WeTutor.entities.*;
 import com.example.WeTutor.repositories.ProfileRepository;
-import com.example.WeTutor.repositories.ProfileRepositoryElasticSearch;
 import com.example.WeTutor.repositories.TutorRepository;
 import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.ProfileRequest;
 import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,9 +23,6 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ProfileService {
-	
-	@Autowired
-	ProfileRepositoryElasticSearch profileRepositoryElasticSearch;
 
     ProfileRepository profileRepository;
     TutorRepository tutorRepository;
@@ -347,43 +342,23 @@ public class ProfileService {
         return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
 
-	public ResponseEntity<Object> getProfileByTutorUserName(String tutorUserName) {
-		JSONObject response = new JSONObject();
-		Profile profile = profileRepositoryElasticSearch.findAllByUserName(tutorUserName);
-		if (profile == null) {
-			response.put("profile","no profile by this username");
-			return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-		}
-		return  ResponseEntity.status(HttpStatus.OK).body(profile);
-	}
-
 	public ResponseEntity<Object> getProfileByTutorLocation(String tutorLocation) {
-		JSONObject response =  new JSONObject();
-		Profile profile = profileRepositoryElasticSearch.getProfileByTutorLocation(tutorLocation);
-		if (profile == null) {
-			 response.put("profile","no profile by this username");
-			return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-		}
-		return  ResponseEntity.status(HttpStatus.OK).body(profile);
+        List<Profile> profiles = profileRepository.getProfileByLocation(tutorLocation);
+		return  ResponseEntity.status(HttpStatus.OK).body(profiles);
 	}
 
-	public ResponseEntity<Object> getProfileByTutorSubjects(String tutorSubjects) {
-		JSONObject response =  new JSONObject();
-		Profile profile = profileRepositoryElasticSearch.getProfileByTutorSubjects(tutorSubjects);
-		if (profile == null) {
-			response.put("profile","no profile by this username");
-			return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-		}
-		return  ResponseEntity.status(HttpStatus.OK).body(profile);
+	public ResponseEntity<Object> getProfileByTutorMajorSubject(String tutorMajorSubject) {
+        List<Profile> profiles = profileRepository.getProfileByMajorSubject(tutorMajorSubject);
+		return  ResponseEntity.status(HttpStatus.OK).body(profiles);
 	}
 
-	public ResponseEntity<Object> getProfileByTutorLanguages(String tutorLanguages) {
-		JSONObject response =  new JSONObject();
-		Profile profile = profileRepositoryElasticSearch.getProfileByTutorLanguages(tutorLanguages);
-		if (profile == null) {
-			 response.put("profile","no profile by this username");
-			return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-		}
-		return  ResponseEntity.status(HttpStatus.OK).body(profile);
+	public ResponseEntity<Object> getProfileByTutorRating(int tutorRating) {
+        List<Profile> profiles = profileRepository.getProfilesByRating(tutorRating);
+		return  ResponseEntity.status(HttpStatus.OK).body(profiles);
 	}
+
+    public ResponseEntity<Object> getProfileByTutorGender(String tutorGender) {
+        List<Profile> profiles = profileRepository.getProfileByGender(tutorGender);
+        return  ResponseEntity.status(HttpStatus.OK).body(profiles);
+    }
 }

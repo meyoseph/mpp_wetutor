@@ -34,6 +34,7 @@ class Profiles extends Component {
     super();
     this.state = {
       searchInput: "",
+      advancedSearch: false,
     };
     this.onChange = this.onChange.bind(this);
   }
@@ -41,6 +42,13 @@ class Profiles extends Component {
     this.props.getProfiles();
   }
 
+  makeSimpleSearchType() {
+    this.setState({ advancedSearch: false });
+  }
+
+  makeAdvanceSearchType() {
+    this.setState({ advancedSearch: true });
+  }
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -113,34 +121,49 @@ class Profiles extends Component {
             <div className="col-md-12 mt-4">
               <h1 className="display-4 text-center">Find tutors here</h1>
               <p className="lead text-center">Browse and contact with tutors</p>
-              <div className="row">
-                <div className="input-group col-md-12 mb-3">
-                  <span className="input-group-text" id="basic-addon1">
-                    <i className="fas fa-search"></i>
-                  </span>
-                  <input
-                    value={this.state.searchInput}
-                    className="form-control mt-0"
-                    name="searchInput"
-                    onChange={this.onChange}
-                    type="search"
-                    placeholder="Live Search using name, education level or work experience"
-                    aria-label="Search"
-                  />
+              <hr style={{ width: "500px" }} />
+              <div className="row mb-4">
+                <div className="col-md-12">
+                  <ul class="nav justify-content-center">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link active"
+                        onClick={this.makeSimpleSearchType.bind(this)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Live Search
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        onClick={this.makeSimpleSearchType.bind(this)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Advanced Search
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-                {/* <div
-                  className="col-md-3"
-                  style={{ marginLeft: "0px", marginTop: "9px" }}
-                >
-                  <button
-                    className="btn btn-info"
-                    type="submit"
-                    style={{ width: "100%" }}
-                  >
-                    Search
-                  </button>
-                </div> */}
               </div>
+              {!this.state.advancedSearch && (
+                <div className="row">
+                  <div className="input-group col-md-12 mb-3">
+                    <span className="input-group-text" id="basic-addon1">
+                      <i className="fas fa-search"></i>
+                    </span>
+                    <input
+                      value={this.state.searchInput}
+                      className="form-control mt-0"
+                      name="searchInput"
+                      onChange={this.onChange}
+                      type="search"
+                      placeholder="Live Search using name, education level or work experience"
+                      aria-label="Search"
+                    />
+                  </div>
+                </div>
+              )}
               {profileContent}
             </div>
           </div>

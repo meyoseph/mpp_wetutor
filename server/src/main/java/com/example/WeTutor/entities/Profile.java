@@ -1,16 +1,10 @@
 package com.example.WeTutor.entities;
 
-import org.springframework.data.elasticsearch.annotations.Document;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import javax.persistence.*;
 
-
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +13,6 @@ import java.util.List;
 @Entity
 @Table(name = "PROFILE_TBL")
 @JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
-@Document(indexName="profileIndex1")
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
