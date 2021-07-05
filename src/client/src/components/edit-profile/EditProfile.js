@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
-import Select from "react-select";
 import SelectListGroup from "../common/SelectListGroup";
-import { createProfile } from "../../actions/profileActions";
-import S3 from "react-s3";
+import Select from "react-select";
+import { editProfile, getCurrentProfile } from "../../actions/profileActions";
+import isEmpty from "../../validation/is-empty";
+import S3 from "react-aws-s3";
 
-class CreateProfile extends Component {
+class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,6 +30,7 @@ class CreateProfile extends Component {
       loading: false,
       errors: {},
     };
+
     this.fileInput = React.createRef();
 
     this.onChange = this.onChange.bind(this);
@@ -43,11 +45,66 @@ class CreateProfile extends Component {
     this.setState({ subjects: selectedSubjects });
   };
 
+  componentDidMount() {
+    this.props.getCurrentProfile();
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
+
+    if (nextProps.profile.profile) {
+      const profile = nextProps.profile.profile;
+
+      let subSelected = [];
+      let langSelected = [];
+
+      const skillsList = profile.subjects.split(",");
+      const languagesList = profile.languages.split(",");
+
+      subSelected = this.prepareSelected(skillsList);
+      langSelected = this.prepareSelected(languagesList);
+
+      // If profile doesnt exist, make an empty sring
+      profile.firstname = !isEmpty(profile.firstName) ? profile.firstName : "";
+      profile.lastname = !isEmpty(profile.lastName) ? profile.lastName : "";
+      profile.gender = !isEmpty(profile.gender) ? profile.gender : "";
+      profile.age = !isEmpty(profile.age) ? profile.age : "";
+      profile.majorsubject = !isEmpty(profile.majorSubject)
+        ? profile.majorSubject
+        : "";
+      profile.education = !isEmpty(profile.educations)
+        ? profile.educations
+        : "";
+      profile.location = !isEmpty(profile.location) ? profile.location : "";
+      profile.workexperience = !isEmpty(profile.workExperiences)
+        ? profile.workExperiences
+        : "";
+      profile.phonenumber = !isEmpty(profile.phoneNumber)
+        ? profile.phoneNumber
+        : "";
+      profile.bio = !isEmpty(profile.motive) ? profile.motive : "";
+
+      // Set component fields state
+      this.setState({
+        firstname: profile.firstname,
+        lastname: profile.lastname,
+        gender: profile.gender,
+        age: profile.age,
+        majorsubject: profile.majorsubject,
+        subjects: subSelected,
+        education: profile.education,
+        location: profile.location,
+        languages: langSelected,
+        workexperience: profile.workexperience,
+        phonenumber: profile.phonenumber,
+        bio: profile.bio,
+        tutorId: this.props.auth.userInfo.id,
+      });
+    }
   }
+
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -64,11 +121,19 @@ class CreateProfile extends Component {
     return temp2;
   };
 
+  prepareSelected = (list) => {
+    const subDefault = [];
+    list.map((sub) => {
+      subDefault.push({ value: sub, label: sub });
+      return subDefault["label"];
+    });
+    return subDefault;
+  };
   async onSubmit(e) {
     this.setState({ loading: true });
     e.preventDefault();
-
-    // Make sure profile picture is uploaded and image source is loaded first
+    let fileName = 'profile'+this.props.auth.userInfo.id;
+        // Make sure profile picture is uploaded and image source is loaded first
     // Allow the tutor not to add his or her profile picture
     if (this.fileInput.current.files.length > 0) {
       let file = this.fileInput.current.files[0];
@@ -78,18 +143,23 @@ class CreateProfile extends Component {
         accessKeyId: process.env.REACT_APP_S3_ACCESS_ID,
         secretAccessKey: process.env.REACT_APP_S3_ACCESS_KEY,
       };
-      await S3.uploadFile(file, config)
+      const ReactS3Client = new S3(config);
+
+      await ReactS3Client.uploadFile(file, fileName)
         .then((data) => {
+          console.log(data.location);
           this.setState({ profilePic: data.location });
         })
         .catch((err) => {
           this.setState({ errors: err.data });
         });
     }
+
     let lang = [];
     let subj = [];
     lang = this.prepareData(this.state.languages);
     subj = this.prepareData(this.state.subjects);
+
     const profileData = {
       firstName: this.state.firstname,
       lastName: this.state.lastname,
@@ -106,13 +176,11 @@ class CreateProfile extends Component {
       profilePic: this.state.profilePic,
       tutorId: this.props.auth.userInfo.id,
     };
-    this.props.createProfile(profileData, this.props.history);
-    this.setState({ loading: false });
+    this.props.editProfile(profileData, this.props.history);
   }
 
   render() {
     const { errors } = this.state;
-
     // Select options for Education
     const educationOptions = [
       { label: "* Select your current education level", value: 0 },
@@ -165,15 +233,15 @@ class CreateProfile extends Component {
     return (
       <div
         className="create-profile shadow-lg mb-5 mt-5 bg-white rounded"
-        style={{ width: "1200px", height: errors ? "980px" : "700px" }}
+        style={{ width: "1200px", height: errors ? "880px" : "700px" }}
       >
         <div className="container">
           <div className="row">
             <div className="col-md-12 m-auto">
-              <h1 className="display-4 text-center">Create Your Profile</h1>
-              <p className="lead text-center">
-                Let's get some information to make your profile stand out
-              </p>
+              <Link to="/dashboard" className="btn btn-light mt-5">
+                Go Back
+              </Link>
+              <h1 className="display-4 text-center">Edit Profile</h1>
               <hr style={{ width: "1100px" }} />
               <small className="d-block pb-3">* = required fields</small>
             </div>
@@ -275,6 +343,8 @@ class CreateProfile extends Component {
                 <div className="col-md-6 mb-3">
                   <Select
                     name="languages"
+                    closeMenuOnSelect={true}
+                    value={this.state.languages}
                     onChange={this.handleLanguagesChange}
                     options={languageOptions}
                     className="basic-multi-select"
@@ -292,6 +362,7 @@ class CreateProfile extends Component {
                 <div className="col-md-6 mb-3">
                   <Select
                     options={subjectsOptions}
+                    value={this.state.subjects}
                     onChange={this.handleSubjectsChange}
                     className="basic-multi-select"
                     isMulti
@@ -370,9 +441,11 @@ class CreateProfile extends Component {
   }
 }
 
-CreateProfile.propTypes = {
-  auth: PropTypes.object.isRequired,
+EditProfile.propTypes = {
+  editProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 };
 
@@ -381,6 +454,6 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
   errors: state.errors,
 });
-export default connect(mapStateToProps, { createProfile })(
-  withRouter(CreateProfile)
+export default connect(mapStateToProps, { editProfile, getCurrentProfile })(
+  withRouter(EditProfile)
 );
