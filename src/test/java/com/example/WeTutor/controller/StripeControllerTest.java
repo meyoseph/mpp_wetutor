@@ -1,5 +1,6 @@
 package com.example.WeTutor.controller;
 
+import com.example.WeTutor.controllers.StripeController;
 import com.example.WeTutor.requests.SubscriptionRequest;
 import com.example.WeTutor.services.StripeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,8 +11,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Objects;
 
@@ -20,8 +23,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = StripeController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@EnableWebMvc
 public class StripeControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +41,9 @@ public class StripeControllerTest {
                 "123",
                 "test@gmail.com"
         );
-        ResultActions resultActions = mockMvc.perform(post("/api/checkout").contentType(MediaType.APPLICATION_JSON)
+        ResultActions resultActions = mockMvc.perform(post("/api/checkout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectToJson(subscriptionRequest))));
         resultActions.andExpect(status().isOk());
     }

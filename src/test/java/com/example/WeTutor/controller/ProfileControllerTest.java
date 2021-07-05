@@ -1,5 +1,6 @@
 package com.example.WeTutor.controller;
 
+import com.example.WeTutor.controllers.ProfileController;
 import com.example.WeTutor.requests.AuthRequest;
 import com.example.WeTutor.requests.ProfileRequest;
 import com.example.WeTutor.requests.RegistrationRequest;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Objects;
 
@@ -22,8 +24,9 @@ import static org.assertj.core.api.Fail.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = ProfileController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@EnableWebMvc
 public class ProfileControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -76,6 +79,7 @@ public class ProfileControllerTest {
                 "1");
         ResultActions resultActions = mockMvc.perform(post("/api/profile/create-profile")
                 .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectToJson(profileRequest))));
         resultActions.andExpect(status().isOk());
     }
@@ -99,8 +103,10 @@ public class ProfileControllerTest {
                 languages,
                 "1",
                 "1");
+
         ResultActions resultActions = mockMvc.perform(post("/api/profile/update-profile")
                 .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectToJson(profileRequest))));
         resultActions.andExpect(status().isOk());
     }

@@ -68,7 +68,7 @@ public class ProfileController {
     } 
     // Creates profile
     @PostMapping("/create-profile")
-    public ResponseEntity<Object> createProfile(@RequestBody ProfileRequest profileRequest) {
+    public ResponseEntity<Object> createProfile(@RequestBody ProfileRequest profileRequest) throws Exception {
         ResponseEntity<Object> response = profileService.addProfile(profileRequest);
         return response;
     }

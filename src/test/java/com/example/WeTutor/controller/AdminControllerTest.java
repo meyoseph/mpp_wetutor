@@ -1,5 +1,6 @@
 package com.example.WeTutor.controller;
 
+import com.example.WeTutor.controllers.AdminController;
 import com.example.WeTutor.services.AdminService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = AdminController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@EnableWebMvc
 public class AdminControllerTest {
     @Autowired
     private MockMvc mockMvc;

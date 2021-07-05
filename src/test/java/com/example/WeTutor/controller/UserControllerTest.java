@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Objects;
 
@@ -33,8 +34,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@EnableWebMvc
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -69,6 +71,7 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectToJson(registrationRequest))));
         resultActions.andExpect(status().isOk());
+        //System.out.println(resultActions);
     }
 
     @Test
@@ -79,7 +82,7 @@ public class UserControllerTest {
 
     @Test
     void itShouldWelcomeEndPoint() throws Exception{
-        ResultActions resultActions = mockMvc.perform(get("/api/"));
+        ResultActions resultActions = mockMvc.perform(get("/api/test"));
         resultActions.andExpect(status().isOk());
     }
 

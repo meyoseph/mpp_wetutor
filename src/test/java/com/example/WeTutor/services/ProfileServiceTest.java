@@ -6,6 +6,7 @@ import com.example.WeTutor.entities.Role;
 import com.example.WeTutor.entities.Tutor;
 import com.example.WeTutor.entities.User;
 import com.example.WeTutor.repositories.ProfileRepository;
+import com.example.WeTutor.repositories.ProfileRepositoryElasticSearch;
 import com.example.WeTutor.repositories.TutorRepository;
 import com.example.WeTutor.repositories.UserRepository;
 import com.example.WeTutor.requests.ProfileRequest;
@@ -39,6 +40,8 @@ import static org.mockito.Mockito.*;
 
 public class ProfileServiceTest {
     @Mock
+    private ProfileRepositoryElasticSearch profileRepositoryElasticSearch;
+    @Mock
     private ProfileRepository profileRepository;
     @Mock
     private TutorRepository tutorRepository;
@@ -52,7 +55,7 @@ public class ProfileServiceTest {
     @BeforeEach
     void setUp(){
         MockitoAnnotations.initMocks(this);
-        profileService = new ProfileService(profileRepository, tutorRepository, userRepository, modelMapper);
+        profileService = new ProfileService(profileRepositoryElasticSearch, profileRepository, tutorRepository, userRepository, modelMapper);
     }
 
     @Test
