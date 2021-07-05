@@ -1,17 +1,14 @@
 package com.example.WeTutor.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -24,17 +21,20 @@ public class Feedback{
     private int rating;
     private LocalDate feedbackDate;
 
-    @OneToOne(mappedBy = "parentFeedbacks")
-    private User parent;
 
-    @OneToOne(mappedBy = "tutorFeedbacks")
-    private User tutor;
+    @OneToOne(mappedBy = "parentFeedback")
+    private Parent parent;
 
-    public Feedback(User parent, int rating, User tutor){
+    @OneToOne(mappedBy = "tutorFeedback")
+    private Tutor tutor;
+
+
+    public Feedback(Parent parent, int rating, Tutor tutor){
         this.parent = parent;
         this.tutor = tutor;
         this.rating = rating;
         this.feedbackDate = LocalDate.now();
     }
+
 
 }

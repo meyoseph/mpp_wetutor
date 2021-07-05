@@ -16,12 +16,12 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
-    @GetMapping("/")
+    @GetMapping("/tutors")
     public ResponseEntity<Object> getProfiles() throws Throwable {
         ResponseEntity<Object> response = profileService.getProfiles();
         return response;
     }
-    
+
     @GetMapping("/all")
     public ResponseEntity<Object> getAllProfiles() throws Throwable {
         ResponseEntity<Object> response = profileService.getAllProfiles();
@@ -39,6 +39,7 @@ public class ProfileController {
     @GetMapping("/{tutorId}")
     public ResponseEntity<Object> getProfileByTutorId(@PathVariable("tutorId") String tutorId) throws Exception {
         ResponseEntity<Object> response = profileService.getProfileById(tutorId);
+        System.out.println("Profile response"+response);
         return response;
     }
 
