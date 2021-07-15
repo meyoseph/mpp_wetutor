@@ -168,7 +168,6 @@ public class StripeService {
             User user = userRepository.findByEmail(email);
             Role role  = user.getRoles().get(0);
             role.setActive(true);
-            boolean a = role.isActive();
             userRepository.save(user);
             response.put("success",true);
             response.put("message","Subscription made successfully!");

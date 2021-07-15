@@ -21,7 +21,6 @@ public class Feedback{
     private int rating;
     private LocalDate feedbackDate;
 
-
     @OneToOne(mappedBy = "parentFeedback")
     private Parent parent;
 
