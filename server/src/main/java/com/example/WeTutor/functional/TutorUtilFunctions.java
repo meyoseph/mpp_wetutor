@@ -75,4 +75,90 @@ public class TutorUtilFunctions {
                     .map(p -> p.getFirstName()+" "+p.getLastName())
                     .collect(Collectors.toList());
 
+    /**
+     * @return Tutors' first name and last name with approved profile, teaches for Specific city with the rating
+     * @params city : the city that the Tutor teaches
+     * @params n: having at least rating value of rating(n)
+     * */
+    public static TriFunction<List<User>,String,Integer,List<String>> tutorsTeachesOnCityWithRating=
+            (tutorsList,city, rating) ->
+                    tutorsList.stream()
+                            .filter(u -> isTutor.apply(u))
+                            .map(u -> u.getProfile())
+                            .filter(p -> (p.getProfileState().equals(ProfileState.APPROVED))&&
+                                    p.getLocation().equals(city) && p.getRating()>=rating)
+                            .map(p -> p.getFirstName()+" "+p.getLastName())
+                            .collect(Collectors.toList());
+    /**
+     * @return Tutors' first name and last name with approved profile, male or female tutors
+     * @params Gender : male or Female
+     * @params age : not older than this value
+     * @params n: having at least rating value of rating(n)
+     * */
+    public static QuadFunction<List<User>,String,Integer,Integer,List<String>> tutorsWithAgeRatingOf3=
+            (tutorsList,gender,age,rating) ->
+                    tutorsList.stream()
+                            .filter(u -> isTutor.apply(u))
+                            .map(u -> u.getProfile())
+                            .filter(p -> (p.getProfileState().equals(ProfileState.APPROVED)&&
+                                    p.getGender().equals(gender) && Integer.parseInt(p.getAge()) >= age &&
+                                    p.getRating()>=rating))
+                            .map(p -> p.getFirstName()+" "+p.getLastName()+" "+p.getGender()+" "+p.getPhoneNumber()+" "+p.getMotive())
+                            .collect(Collectors.toList());
+    /**
+     * @return Total Number of Suscribed Parents
+     */
+    public static final Function<List<User>, Long> getTotalSubscribedParents = (usersList) ->
+            usersList.stream()
+                    .flatMap(u -> u.getRoles().stream())
+                    .filter(r -> r instanceof Parent)
+                    .map(r -> (Parent) r)
+                    .filter(p -> p.isActive())
+                    .count();
+    /**
+     * @return Total Number of Approved Tutors
+     */
+    public static final Function<List<User>, Long> getTotalApprovedTutors = (usersList) ->
+            usersList.stream()
+                    .filter(u -> isTutor.apply(u))
+                    .map(u -> u.getProfile())
+                    .filter(p -> p.getProfileState().equals(ProfileState.APPROVED))
+                    .count();
+    /**
+     * @return Tutors' first name, Qualification and Number of Experience with approved profile,  tutors
+     * @params qualification : Number of experiance that the tutor have
+     * @params education : having a qualification of e.g "Degree"
+     * @params K: having at least rating value of rating(K)
+     * */
+
+    public static final QuadFunction<List<User>, String, String, Integer,List<String>>
+            findTopTutorsHavingDegreeAndNPlusExperiances =
+            (usersList, qualification, experiences ,k) ->
+                    usersList.stream()
+                            .filter(u -> isTutor.apply(u))
+                            .map(u -> u.getProfile())
+                            .filter(p -> p.getProfileState().equals(ProfileState.APPROVED) &&
+                                    p.getEducations().equals(qualification)
+                                    && p.getWorkExperiences().equals(experiences))
+                            .sorted((s1,s2) -> s2.getRating() - s1.getRating())
+                            .limit(k)
+                            .map(p -> p.getFirstName()+" "+p.getEducations()+" "+p.getWorkExperiences()+" "+p.getRating())
+                            .collect(Collectors.toList());
+
+    public static final QuadFunction<List<User>, String, String,Integer,List<String>>
+            findTutorsHavingExperianceOnMajor =
+            (usersList, major, experiences ,k) ->
+                    usersList.stream()
+                            .filter(u -> isTutor.apply(u))
+                            .map(u -> u.getProfile())
+                            .filter(p -> p.getProfileState().equals(ProfileState.APPROVED) &&
+                                    p.getMajorSubject().equals(major)
+                                    && p.getWorkExperiences().equals(experiences))
+                            .sorted((s1,s2) -> s2.getRating() - s1.getRating())
+                            .limit(k)
+                            .map(p -> p.getFirstName()+", "+p.getMajorSubject()+", "+p.getEducations()+", "+p.getWorkExperiences()+", "+p.getRating())
+                            .collect(Collectors.toList());
+
+
+
 }
