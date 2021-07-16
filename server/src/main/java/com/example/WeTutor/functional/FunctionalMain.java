@@ -30,6 +30,18 @@ public class FunctionalMain {
             System.out.println(
                     "\tc) Given a list of users, identify tutors and get tutors younger than 25, specialized in English, and who can speak Turkish");
             System.out.println(
+                    "\td) Given a list of users, identify tutors and get total approved profiles of tutors");
+            System.out.println(
+                    "\te) Given a list of users, identify tutors and get top 4 tutors having 'Bachelor' and 3 years of experience");
+            System.out.println(
+                    "\tf) Given a list of users, identify tutors and get top Female young tutors");
+            System.out.println(
+                    "\tg) Given a list of users, identify parents and get total number subscribed parents");
+            System.out.println(
+                    "\th) Given a list of users, identify tutors and get top tutors with 7 years of experience in 'Mathematics;");
+            System.out.println(
+                    "\ti) Given a list of users, identify tutors and get top tutors gives tutor on 'LocationOne' city");
+            System.out.println(
                     "\tx) Exit");
 
             // ---WAIT-INPUT---
@@ -73,6 +85,69 @@ public class FunctionalMain {
                     System.out.println("**************************************************************************************************************************************************************");
                     System.out.println("**************************************************************************************************************************************************************");
                     break;
+                case 'd':
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("************************************ Looking for Total Number of Approved Profiles of Tutors ... ****************");
+                    System.out.println("");
+                    // Expected output: [ 5 ]
+                    System.out.println("**************************************************** Search result   :   "
+                            +TutorUtilFunctions.getTotalApprovedTutors.apply(users)
+                            +" ****************************************************");
+                    System.out.println("");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    break;
+
+                case 'e':
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("************************************ Looking for top tutors having Bachelor and  3 years of experience... ****************");
+                    System.out.println("");
+                    // Expected output: [ TutorThreeFirst Bachelor 3 years 1 ]
+                    System.out.println("**************************************************** Search result   :   "
+                            +TutorUtilFunctions.findTopTutorsHavingDegreeAndNPlusExperiances.apply(users,"Bachelor","3 years",4)
+                            +" ****************************************************");
+                    System.out.println("");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    break;
+                case 'f':
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("************************************ Looking for top young female tutors ... ****************");
+                    System.out.println("");
+                    // Expected output: [TutorEightFirst TutorEightLast Female +16415895608 MotiveEight ]
+                    System.out.println("**************************************************** Search result   :   "
+                            +TutorUtilFunctions.tutorsWithAgeRatingOf3.apply(users,"Female",27,4)
+                            +" ****************************************************");
+                    System.out.println("");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    break;
+
+                case 'g':
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("************************************ Looking for top total number of subscribed parents ... ****************");
+                    System.out.println("");
+                    // Expected output: [4]
+                    System.out.println("**************************************************** Search result   :   "
+                            +TutorUtilFunctions.getTotalSubscribedParents.apply(users)
+                            +" ****************************************************");
+                    System.out.println("");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    break;
+                case 'h':
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("************************************ Looking for tutor 7 years of experienced in maths ... ****************");
+                    System.out.println("");
+                    // Expected output: [TutorSevenFirst, Math, Diploma, 7 years, 4]
+                    System.out.println("**************************************************** Search result   :   "
+                            +TutorUtilFunctions.findTutorsHavingExperianceOnMajor.apply(users,"Math","7 years",4)
+                            +" ****************************************************");
+                    System.out.println("");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    System.out.println("**************************************************************************************************************************************************************");
+                    break;
+
                 // ADD MORE FUNCTIONS HERE
                 case 'x':
                     System.out.println("***********************************************************************************");
